@@ -1,0 +1,6 @@
+name: baseline_llm
+task_name: paper/baseline_llm
+dataset_loader: omni-math
+dataset_path: data/omni-math-2-filtered/all.jsonl
+trace_tag: baseline_llm
+artifact_tag: baseline_llm

@@ -1,0 +1,86 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the paper below."
+title: "Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning"
+abstract: >-
+  Many recent math- and science-oriented agent systems adopt hierarchical designs
+  with specialized reviewer roles, assuming that a dedicated review stage helps
+  turn wrong candidates into correct ones. We test that assumption on 4,181
+  verifier-grounded Omni-MATH problems using matched gpt-oss-120b actors. From
+  tier 4 onward collaboration gains open sharply, and in that harder regime
+  broadcast-style peer discussion reaches higher final accuracy than a
+  planner-executor-reviewer pipeline (PER). The gap is not explained by reviewer
+  precision alone: PER's reviewer is more precise (0.861 vs 0.644), yet verified
+  useful critique is much less likely to change the next candidate and produces
+  lower reviewer-guided repair. Reviewer detection quality and critique uptake
+  are empirically separable.
+type: software
+license: Apache-2.0
+version: "1.0.0"
+date-released: "2026-07-16"
+repository-code: "https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled"
+url: "https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/"
+keywords:
+  - multi-agent systems
+  - large language models
+  - peer review
+  - mathematical reasoning
+  - reproducibility
+authors:
+  - family-names: "Yang"
+    given-names: "Chih-Hsuan"
+    affiliation: "Argonne National Laboratory"
+    email: "bellayang@anl.gov"
+  - family-names: "Jiang"
+    given-names: "Jingyan"
+    affiliation: "Argonne National Laboratory"
+  - family-names: "Vasudevan"
+    given-names: "Vikram"
+    affiliation: "Oregon State University"
+  - family-names: "Yang"
+    given-names: "Cheng-Hau"
+    affiliation: "Argonne National Laboratory"
+  - family-names: "Zheng"
+    given-names: "Huihuo"
+    affiliation: "Argonne National Laboratory"
+  - family-names: "Chen"
+    given-names: "Le"
+    affiliation: "Argonne National Laboratory"
+  - family-names: "Huerta"
+    given-names: "Eliu A."
+    affiliation: "Argonne National Laboratory; University of Chicago"
+  - family-names: "Vishwanath"
+    given-names: "Venkatram"
+    affiliation: "Argonne National Laboratory"
+  - family-names: "Foster"
+    given-names: "Ian T."
+    affiliation: "Argonne National Laboratory; University of Chicago"
+  - family-names: "Thakur"
+    given-names: "Rajeev"
+    affiliation: "Argonne National Laboratory"
+identifiers:
+  - type: doi
+    value: "10.48550/arXiv.2607.15388"
+    description: "arXiv DOI for the preprint"
+  - type: other
+    value: "arXiv:2607.15388"
+    description: "arXiv identifier (v1, 2026-07-16)"
+preferred-citation:
+  type: article
+  title: "Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning"
+  year: 2026
+  month: 7
+  journal: "arXiv preprint arXiv:2607.15388"
+  doi: "10.48550/arXiv.2607.15388"
+  url: "https://arxiv.org/abs/2607.15388"
+  notes: "Preprint. arXiv:2607.15388 [cs.AI], v1, 16 July 2026."
+  authors:
+    - { family-names: "Yang",       given-names: "Chih-Hsuan" }
+    - { family-names: "Jiang",      given-names: "Jingyan" }
+    - { family-names: "Vasudevan",  given-names: "Vikram" }
+    - { family-names: "Yang",       given-names: "Cheng-Hau" }
+    - { family-names: "Zheng",      given-names: "Huihuo" }
+    - { family-names: "Chen",       given-names: "Le" }
+    - { family-names: "Huerta",     given-names: "Eliu A." }
+    - { family-names: "Vishwanath", given-names: "Venkatram" }
+    - { family-names: "Foster",     given-names: "Ian T." }
+    - { family-names: "Thakur",     given-names: "Rajeev" }

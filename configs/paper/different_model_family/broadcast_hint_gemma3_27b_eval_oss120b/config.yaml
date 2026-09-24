@@ -1,0 +1,184 @@
+# Omni-MATH broadcast-deliberation configuration for the Sophia ALCF endpoint.
+# Actor-family check: use Llama 3.1 70B for the three deliberation peers while
+# keeping the paper evaluator fixed on gpt-oss-120b.
+
+max_rounds: &max_rounds 3
+
+prompts:
+  deliberator_prepend_prompt: &deliberator_prepend_prompt |-
+    You are one peer in a small math deliberation group.
+
+    Problem:
+    ${task_description}
+
+    Outer-loop feedback from the evaluator or prior attempt:
+    ${advice}
+
+    Current shared candidate answer:
+    ${candidate_answer}
+
+    Your mathematical temperament:
+    ${role_description}
+
+    Your private deferred notes:
+    ${private_memory}
+
+    Current turn label:
+    ${current_turn_label}
+
+    Your own speaking history in this run:
+    ${own_speak_history}
+
+    Current phase:
+    ${phase}
+
+    Phase instruction:
+    ${phase_instruction}
+
+  deliberator_append_prompt: &deliberator_append_prompt |-
+    Use the shared chat history above to stay consistent with the ongoing discussion.
+    Be concise, concrete, and mathematically serious.
+    Omni-MATH final answers are not always plain numbers. A valid answer may be a symbolic expression, formula, set, interval, condition, equality, or inequality.
+    Do not role-play a rigid planner / executor / reviewer pipeline.
+    When the system asks for a confidence poll, you must provide an integer confidence score from 1 to 100 in the required structured format.
+    If you want the group to consider a concrete final answer, include:
+    Candidate Answer:
+    \boxed{<answer>}
+
+  evaluator_prepend_prompt: &evaluator_prepend_prompt |-
+    You are the Evaluator for a multi-agent math deliberation system.
+
+    Problem:
+    ${task_description}
+
+    MAS final submission:
+    ${solution}
+
+    Ground truth / evaluator-only reference material:
+    ${result}
+
+    Requirements:
+      - Decide whether the MAS final answer is mathematically equivalent to the ground truth.
+      - Focus on the final answer, not stylistic wording.
+      - The reference material may include both the final answer and an official solution. Use the official solution only to understand the intended reasoning and diagnose mismatch type.
+      - The repair hint must be tailored to the current extracted MAS final answer, the ground-truth final answer, and the official solution. Do not recycle a previous hint unless the current final answer and mismatch type are unchanged.
+      - If the current final answer changed, diagnose the new mismatch type, for example wrong value, incomplete list, placeholder, wrong answer shape, missing cases, or insufficient generality.
+      - The final answer may be numeric, symbolic, formulaic, set-valued, or conditional.
+      - If the submission gives isolated numbers/examples but the problem asks for all objects, a formula/equation, a condition, or a classification, the hint should explicitly flag an answer-shape or generality mismatch without naming the missing answer.
+      - For prompts such as "find all", "for each", "all positive integers", "all functions", or "explicit form", check that the answer is a complete universal statement/family, not just tested cases.
+      - Do not reveal, quote, restate, or hint at the ground truth or official solution in your response.
+      - Output a clear verdict label: `Verdict: PASS` or `Verdict: FAIL`.
+      - If the answer is equivalent, output `Correctness: 1`.
+      - Otherwise output `Correctness: 0` and give a short non-leaking repair hint. When relevant, name answer-shape or generality mismatch, such as an over-specific numeric answer when a general condition/equation/family is required.
+
+  evaluator_append_prompt: &evaluator_append_prompt |-
+    Output format:
+    Verdict: PASS or FAIL
+    Correctness: 0 or 1
+    Response: <brief non-leaking repair hint; mention answer-shape/generality if relevant, without revealing the gold answer>
+
+name: broadcast-deliberation
+
+environment:
+  env_type: task-broadcast-deliberation
+  max_rounds: *max_rounds
+  rule:
+    discussion_rounds: 4
+    approval_rounds: 2
+    speak_threshold: 65
+    memory_mode: summary_plus_recent
+    recent_history_window: 3
+    approval_policy: unanimous
+    candidate_selection_policy: majority_revision
+    reviewer_feedback_mode: hint
+    evaluator:
+      type: llm
+
+agents:
+  - agent_type: deliberator
+    name: Mira
+    role_description: |-
+      You are a calm mathematical peer who likes to decompose difficult problems into a few stable subgoals before committing to a conclusion. You tend to slow the group down just enough to reduce avoidable mistakes.
+    prepend_prompt_template: *deliberator_prepend_prompt
+    append_prompt_template: *deliberator_append_prompt
+    max_retry: 10
+    max_public_context_tokens: 1600
+    max_private_context_tokens: 400
+    max_speak_history_context_tokens: 400
+    max_advice_context_tokens: 1200
+    max_candidate_context_tokens: 200
+    max_manual_prompt_tokens: 8000
+    memory:
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: google/gemma-3-27b-it
+      temperature: 0
+      max_tokens: 2048
+    output_parser:
+      type: dummy
+
+  - agent_type: deliberator
+    name: Rowan
+    role_description: |-
+      You are a skeptical mathematical peer who naturally looks for hidden assumptions, incorrect leaps, and edge cases. You do not object for the sake of objecting; you intervene when you think precision matters.
+    prepend_prompt_template: *deliberator_prepend_prompt
+    append_prompt_template: *deliberator_append_prompt
+    max_retry: 10
+    max_public_context_tokens: 1600
+    max_private_context_tokens: 400
+    max_speak_history_context_tokens: 400
+    max_advice_context_tokens: 1200
+    max_candidate_context_tokens: 200
+    max_manual_prompt_tokens: 8000
+    memory:
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: google/gemma-3-27b-it
+      temperature: 0
+      max_tokens: 2048
+    output_parser:
+      type: dummy
+
+  - agent_type: deliberator
+    name: Talia
+    role_description: |-
+      You are a synthesis-oriented mathematical peer who tries to consolidate the group's strongest ideas into one coherent answer. You are willing to propose a final answer, but only when the discussion has earned it.
+    prepend_prompt_template: *deliberator_prepend_prompt
+    append_prompt_template: *deliberator_append_prompt
+    max_retry: 10
+    max_public_context_tokens: 1600
+    max_private_context_tokens: 400
+    max_speak_history_context_tokens: 400
+    max_advice_context_tokens: 1200
+    max_candidate_context_tokens: 200
+    max_manual_prompt_tokens: 8000
+    memory:
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: google/gemma-3-27b-it
+      temperature: 0
+      max_tokens: 2048
+    output_parser:
+      type: dummy
+
+  - agent_type: evaluator
+    name: Evaluator
+    role_description: |-
+      Evaluator
+    prepend_prompt_template: *evaluator_prepend_prompt
+    append_prompt_template: *evaluator_append_prompt
+    max_retry: 10
+    memory:
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: openai/gpt-oss-120b
+      temperature: 0
+      max_tokens: 4096
+    output_parser:
+      type: mgsm-evaluator
+      dimensions:
+        - Correctness

@@ -1,0 +1,44 @@
+# ---------------------------------------------------------------------------
+# Runtime artifacts. Several of these are written by the vendored AgentVerse
+# runtime the moment it is imported or run, so they WILL appear during normal
+# use. None of them is release content.
+# ---------------------------------------------------------------------------
+
+# Log files written by the runtime.
+#   logs/{activity,error}.log  <- agentverse/logging.py creates these on import
+#   api_rate_monitor.log       <- agentverse/llms/openai.py rate monitor
+*.log
+logs/
+api_rate_monitor.log
+
+# Python bytecode and tool caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+env/
+.env
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# ---------------------------------------------------------------------------
+# Generated / downloaded data. The released REFERENCE artifacts under
+# results/derived_tables/ and data/derived/ ARE tracked; only regenerated and
+# downloaded copies are ignored, so a reader's own run can never be mistaken
+# for reference data.
+# ---------------------------------------------------------------------------
+data/hf/
+data/traces/
+results/live/
+results/**/_regenerated/
+*.partial
+*.part

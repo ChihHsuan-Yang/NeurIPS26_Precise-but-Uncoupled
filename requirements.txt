@@ -1,0 +1,37 @@
+# Pinned runtime for the "Precise but Uncoupled" release.
+#
+# Two tiers. Track A (offline reproduction of the tables) needs only the first
+# block. Track B (live re-execution against your own endpoint) needs both.
+#
+# Verified on CPython 3.9.6 and 3.13.0. The 2x5 headline table is byte-identical
+# under pandas 2.3.3 / py3.9.6, pandas 3.0.3 / py3.13.0, and the original
+# analysis environment -- so the pandas pin below is a floor for convenience,
+# not a correctness requirement.
+
+# ---- Track A: offline analysis, no model calls ----
+pandas==2.3.3
+pyarrow==21.0.0          # reading the released parquet traces
+PyYAML==6.0.3
+colorama==0.4.6          # agentverse.logging writes coloured console output
+
+# ---- Track A: fetching the released dataset ----
+huggingface_hub==1.8.0
+
+# ---- Track B: live protocol re-execution (adds ~4 packages) ----
+openai>=1.30,<2          # OpenAI-compatible client; any compliant server works
+pydantic>=1.10.13,<2     # AgentVerse models are pydantic v1 style
+tenacity==8.5.0          # retry/backoff around endpoint errors
+aiohttp>=3.9             # async request path
+tiktoken>=0.5.1          # prompt-length accounting
+rapidfuzz>=3.0           # manager-agent string matching
+
+# ---- Tests ----
+pytest>=8.0
+
+# NOT required, and deliberately not pinned here:
+#   torch, transformers  -- only for the OPTIONAL Omni-Judge evaluator
+#                           (public model KbsdJames/Omni-Judge). The paper's four
+#                           primary configs use `evaluator: {type: llm}` and never
+#                           load it. Install them yourself if you want that path.
+#   sympy, latex2sympy2, word2number, regex
+#                        -- only for the OPTIONAL rule-based Omni-MATH evaluator.

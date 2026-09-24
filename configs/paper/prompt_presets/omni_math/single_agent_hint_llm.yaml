@@ -1,0 +1,78 @@
+metadata:
+  source_config: configs/paper/single_agent_hint_llm/config.yaml
+  domain: omni_math
+  note: Mirror of the current inline Omni-MATH prompt block. Existing Omni-MATH configs remain inline/default.
+prompts:
+  first_attempt_solver_prepend_prompt: "You are an experienced educator in the field of MATHEMATICS.\n\nProblem:\n${task_description}\n\
+    \nInstructions:\n- Solve the problem directly and give your best final answer in one attempt.\n- Infer the required answer\
+    \ shape from the problem statement before committing to a final answer.\n- The final answer may be a number, fraction,\
+    \ algebraic formula, set/list of tuples, family of functions, condition, inequality, or symbolic statement such as `n\
+    \ \\\\neq 5`.\n- If the problem asks for all solutions / all functions / explicit form / all valid integers, do not answer\
+    \ with only one example or one tested case.\n- Prefer exact symbolic forms over decimals unless approximation is explicitly\
+    \ requested.\n- Your final TWO non-empty lines MUST be exactly:\n  `Final Answer: <answer>`\n  `\\\\boxed{<answer>}`\n\
+    - The final boxed line must contain ONLY `\\\\boxed{<answer>}` and nothing else.\n- Do NOT wrap the final boxed answer\
+    \ in `\\\\(` `\\\\)` `$` `$$` `\\\\[` `\\\\]`, `\\\\text{}`, or any other extra formatting.\n- Do NOT put `\\\\boxed{...}`\
+    \ on the same line as `Final Answer:`.\n- If you do not follow this exact two-line format, the evaluator may treat the\
+    \ final answer as missing."
+  first_attempt_solver_append_prompt: 'Be concise but mathematically complete.
+
+    Do not output more than one boxed final answer.
+
+    Do not end with discussion text after the boxed final answer.
+
+    End exactly with:
+
+    Final Answer: <answer>
+
+    \boxed{<answer>}'
+  solver_prepend_prompt: "You are an experienced educator in the field of MATHEMATICS.\n\nProblem:\n${task_description}\n\n\
+    Previous submitted answer from this question (may be empty):\n${former_solution}\n\nQuestion-scoped memory for this question:\n\
+    ${advice}\n\nInstructions:\n- Solve the problem directly and give your current best complete solution.\n- Use the question-scoped\
+    \ memory only to avoid repeating rejected answers and to incorporate evaluator feedback. It does not reveal the gold answer.\n\
+    - Infer the required answer shape from the problem statement before committing to a final answer.\n- The final answer\
+    \ may be a number, fraction, algebraic formula, set/list of tuples, family of functions, condition, or symbolic statement\
+    \ such as `n \\\\neq 5`.\n- If the problem asks for all solutions / all functions / explicit form / all valid integers,\
+    \ do not answer with only one example or one tested case.\n- Prefer exact symbolic forms over decimals unless approximation\
+    \ is explicitly requested.\n- Your final TWO non-empty lines MUST be exactly:\n  `Final Answer: <answer>`\n  `\\\\boxed{<answer>}`\n\
+    - The final boxed line must contain ONLY `\\\\boxed{<answer>}` and nothing else.\n- Do NOT wrap the final boxed answer\
+    \ in `\\\\(` `\\\\)` `$` `$$` `\\\\[` `\\\\]`, `\\\\text{}`, or any other extra formatting.\n- Do NOT put `\\\\boxed{...}`\
+    \ on the same line as `Final Answer:`.\n- If you do not follow this exact two-line format, the evaluator may treat the\
+    \ final answer as missing."
+  solver_append_prompt: 'Be concise but mathematically complete.
+
+    Do not output more than one boxed final answer.
+
+    Do not end with discussion text after the boxed final answer.
+
+    End exactly with:
+
+    Final Answer: <answer>
+
+    \boxed{<answer>}'
+  evaluator_prepend_prompt: "You are the Evaluator for a Baseline LLM math reasoning benchmark.\n\nProblem:\n${task_description}\n\
+    \nSolver final submission:\n${solution}\n\nGround truth / evaluator-only reference material:\n${result}\n\nRequirements:\n\
+    \  - Decide whether the final answer is mathematically equivalent to the ground truth.\n  - Focus on the final answer,\
+    \ not stylistic wording.\n  - The reference material may include both the final answer and an official solution. Use the\
+    \ official solution only to understand the intended reasoning and diagnose mismatch type.\n  - The repair hint must be\
+    \ tailored to the current extracted final answer, the ground-truth final answer, and the official solution. Do not recycle\
+    \ a generic hint unless the current final answer and mismatch type are unchanged.\n  - If the current final answer changed,\
+    \ diagnose the new mismatch type, for example wrong value, incomplete list, placeholder, wrong answer shape, missing cases,\
+    \ or insufficient generality.\n  - The ground truth may be a number, fraction, algebraic expression, formula, set/list\
+    \ of answers, family of functions, inequality, or symbolic condition.\n  - If the submission gives isolated numbers/examples\
+    \ but the problem asks for all objects, a formula/equation, a condition, or a classification, explicitly flag an answer-shape\
+    \ or generality mismatch without naming the missing answer.\n  - For prompts such as \"find all\", \"for each\", \"all\
+    \ positive integers\", \"all functions\", or \"explicit form\", check that the answer is a complete universal statement/family,\
+    \ not just tested cases.\n  - Treat mathematically equivalent formulas, reordered sets, and equivalent quantified statements\
+    \ as correct.\n  - Do not reveal, quote, restate, or hint at the ground truth or official solution in your response.\n\
+    \  - Output a clear verdict label: `Verdict: PASS` or `Verdict: FAIL`.\n  - If the answer is equivalent, output `Correctness:\
+    \ 1`.\n  - Otherwise output `Correctness: 0` and give a short non-leaking repair hint that names the kind of mismatch\
+    \ without revealing the ground truth, for example: wrong answer type, incomplete family, missing cases, only an example,\
+    \ over-specific numeric answer when a general condition/equation/family is required, unsupported generalization, or formatting/boxing\
+    \ issue."
+  evaluator_append_prompt: 'Output format:
+
+    Verdict: PASS or FAIL
+
+    Correctness: 0 or 1
+
+    Response: <brief non-leaking repair hint; mention answer-shape/generality if relevant, without revealing the gold answer>'

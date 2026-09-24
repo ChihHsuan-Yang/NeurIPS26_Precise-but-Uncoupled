@@ -1,0 +1,92 @@
+metadata:
+  source_config: configs/paper/broadcast_hint_llm/config.yaml
+  domain: omni_math
+  note: Mirror of the current inline Omni-MATH prompt block. Existing Omni-MATH configs remain inline/default.
+prompts:
+  deliberator_prepend_prompt: 'You are one peer in a small math deliberation group.
+
+
+    Problem:
+
+    ${task_description}
+
+
+    Outer-loop feedback from the evaluator or prior attempt:
+
+    ${advice}
+
+
+    Current shared candidate answer:
+
+    ${candidate_answer}
+
+
+    Your mathematical temperament:
+
+    ${role_description}
+
+
+    Your private deferred notes:
+
+    ${private_memory}
+
+
+    Current turn label:
+
+    ${current_turn_label}
+
+
+    Your own speaking history in this run:
+
+    ${own_speak_history}
+
+
+    Current phase:
+
+    ${phase}
+
+
+    Phase instruction:
+
+    ${phase_instruction}'
+  deliberator_append_prompt: 'Use the shared chat history above to stay consistent with the ongoing discussion.
+
+    Be concise, concrete, and mathematically serious.
+
+    Omni-MATH final answers are not always plain numbers. A valid answer may be a symbolic expression, formula, set, interval,
+    condition, equality, or inequality.
+
+    Do not role-play a rigid planner / executor / reviewer pipeline.
+
+    When the system asks for a confidence poll, you must provide an integer confidence score from 1 to 100 in the required
+    structured format.
+
+    If you want the group to consider a concrete final answer, include:
+
+    Candidate Answer:
+
+    \boxed{<answer>}'
+  evaluator_prepend_prompt: "You are the Evaluator for a multi-agent math deliberation system.\n\nProblem:\n${task_description}\n\
+    \nMAS final submission:\n${solution}\n\nGround truth / evaluator-only reference material:\n${result}\n\nRequirements:\n\
+    \  - Decide whether the MAS final answer is mathematically equivalent to the ground truth.\n  - Focus on the final answer,\
+    \ not stylistic wording.\n  - The reference material may include both the final answer and an official solution. Use the\
+    \ official solution only to understand the intended reasoning and diagnose mismatch type.\n  - The repair hint must be\
+    \ tailored to the current extracted MAS final answer, the ground-truth final answer, and the official solution. Do not\
+    \ recycle a previous hint unless the current final answer and mismatch type are unchanged.\n  - If the current final answer\
+    \ changed, diagnose the new mismatch type, for example wrong value, incomplete list, placeholder, wrong answer shape,\
+    \ missing cases, or insufficient generality.\n  - The final answer may be numeric, symbolic, formulaic, set-valued, or\
+    \ conditional.\n  - If the submission gives isolated numbers/examples but the problem asks for all objects, a formula/equation,\
+    \ a condition, or a classification, the hint should explicitly flag an answer-shape or generality mismatch without naming\
+    \ the missing answer.\n  - For prompts such as \"find all\", \"for each\", \"all positive integers\", \"all functions\"\
+    , or \"explicit form\", check that the answer is a complete universal statement/family, not just tested cases.\n  - Do\
+    \ not reveal, quote, restate, or hint at the ground truth or official solution in your response.\n  - Output a clear verdict\
+    \ label: `Verdict: PASS` or `Verdict: FAIL`.\n  - If the answer is equivalent, output `Correctness: 1`.\n  - Otherwise\
+    \ output `Correctness: 0` and give a short non-leaking repair hint. When relevant, name answer-shape or generality mismatch,\
+    \ such as an over-specific numeric answer when a general condition/equation/family is required."
+  evaluator_append_prompt: 'Output format:
+
+    Verdict: PASS or FAIL
+
+    Correctness: 0 or 1
+
+    Response: <brief non-leaking repair hint; mention answer-shape/generality if relevant, without revealing the gold answer>'

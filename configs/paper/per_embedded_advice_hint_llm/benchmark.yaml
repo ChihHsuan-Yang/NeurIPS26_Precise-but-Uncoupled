@@ -1,0 +1,6 @@
+name: per_embedded_advice_hint_llm
+task_name: paper/per_embedded_advice_hint_llm
+dataset_loader: omni-math
+dataset_path: data/omni-math-2-filtered/all.jsonl
+trace_tag: per_embedded_advice_hint_llm
+artifact_tag: per_embedded_advice_hint_llm

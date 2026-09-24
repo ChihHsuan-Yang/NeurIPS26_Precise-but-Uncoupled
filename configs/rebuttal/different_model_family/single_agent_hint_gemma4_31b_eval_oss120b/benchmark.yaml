@@ -1,0 +1,6 @@
+name: single_agent_hint_gemma4_31b_eval_oss120b
+task_name: paper/different_model_family/single_agent_hint_gemma4_31b_eval_oss120b
+dataset_loader: omni-math
+dataset_path: data/omni-math-2-filtered/all.jsonl
+trace_tag: single_agent_hint_gemma4_31b_eval_oss120b
+artifact_tag: single_agent_hint_gemma4_31b_eval_oss120b

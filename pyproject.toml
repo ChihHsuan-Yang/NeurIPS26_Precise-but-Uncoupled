@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "precise-uncoupled"
+version = "1.0.0"
+description = "Code and reproduction pipeline for 'Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning'"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+keywords = ["multi-agent", "llm", "peer-review", "mathematical-reasoning", "reproducibility"]
+
+authors = [
+  { name = "Chih-Hsuan Yang", email = "bellayang@anl.gov" },
+  { name = "Jingyan Jiang" },
+  { name = "Vikram Vasudevan" },
+  { name = "Cheng-Hau Yang" },
+  { name = "Huihuo Zheng" },
+  { name = "Le Chen" },
+  { name = "Eliu A. Huerta" },
+  { name = "Venkatram Vishwanath" },
+  { name = "Ian T. Foster" },
+  { name = "Rajeev Thakur" },
+]
+
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+  "pandas>=2.0",
+  "pyarrow>=14",
+  "PyYAML>=6",
+  "colorama>=0.4.6",
+]
+
+[project.optional-dependencies]
+# Live re-execution against your own OpenAI-compatible endpoint.
+live = [
+  "openai>=1.30,<2",
+  "pydantic>=1.10.13,<2",
+  "tenacity>=8.2",
+  "aiohttp>=3.9",
+  "tiktoken>=0.5.1",
+  "rapidfuzz>=3.0",
+]
+# Downloading the released dataset from Hugging Face.
+data = ["huggingface_hub>=0.23"]
+# Optional rule-based Omni-MATH evaluator (NOT on the paper's default path).
+rule-eval = ["sympy>=1.12", "latex2sympy2", "word2number", "regex"]
+# Optional Omni-Judge evaluator (NOT on the paper's default path; large).
+judge-eval = ["torch", "transformers"]
+test = ["pytest>=8.0"]
+
+[project.urls]
+Homepage      = "https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/"
+Repository    = "https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled"
+Dataset       = "https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled"
+Paper         = "https://arxiv.org/abs/2607.15388"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["precise_uncoupled*", "agentverse*", "dataloader*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

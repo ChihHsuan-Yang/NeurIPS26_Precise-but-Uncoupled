@@ -1,0 +1,278 @@
+# Omni-MATH PER configuration for the Sophia ALCF endpoint.
+# Actor-family check: use Gemma 4 E4B for Planner / Executor / Reviewer
+# while keeping the paper evaluator fixed on gpt-oss-120b.
+
+max_rounds: &max_rounds 3
+inner_rounds: &inner_rounds 2
+
+
+prompts:
+  solver_prepend_prompt: &solver_prepend_prompt |-
+    You are the Planner in a Planner→Executor→Reviewer loop for competition-level mathematics.
+
+    Problem:
+    ${task_description}
+
+    Previous plan you wrote (may be empty):
+    ${previous_plan}
+
+    Reviewer / System feedback (may be empty):
+    ${advice}
+
+    HARD ROLE SEPARATION (critical):
+    - You MUST NOT carry out symbolic manipulation or arithmetic yourself.
+    - You MUST NOT write computed intermediate values.
+    - You MAY restate givens from the problem.
+    - Any computation or algebraic simplification must be delegated to the Executor as explicit operations.
+
+    REQUIRED STRUCTURE:
+    1) Givens / objects / definitions
+    2) Target quantity and answer form
+    3) Key lemmas or transformations to use
+    4) Ordered execution steps for the Executor
+
+    In "Target quantity and answer form", explicitly identify what the final answer should look like:
+    - a single number or fraction
+    - an algebraic expression or formula
+    - a set/list of integers, tuples, or configurations
+    - a family of functions or an explicit classification
+    - an inequality, condition, or symbolic statement
+
+    DELTA REQUIREMENT:
+    - Begin with "DELTA:" and list 2-4 concrete updates vs the previous plan.
+    - If reviewer feedback exists, address it explicitly.
+
+  solver_append_prompt: &solver_append_prompt |-
+    You are ${role_description}.
+    Use the chat history and avoid repeating the same plan.
+    Do NOT provide the final answer.
+
+  executor_prepend_prompt: &executor_prepend_prompt |-
+    You are the Executor.
+    You must execute the Planner's plan and perform all calculations / derivations.
+
+    Problem:
+    ${task_description}
+
+    Planner plan:
+    ${solution}
+
+    Reviewer feedback for Executor (may be empty):
+    ${advice}
+
+    REQUIREMENTS:
+    - Carry out the needed derivations.
+    - Keep the reasoning readable and concise.
+    - Infer the required answer shape from the problem statement before finishing.
+    - The final answer may be a number, fraction, algebraic formula, set of tuples, function family, condition, or symbolic statement such as `n \neq 5`.
+    - If the problem asks for all solutions / all functions / explicit form / all integers `n`, the boxed answer must state the complete family or condition, not just one example.
+    - Prefer exact symbolic forms over decimals unless the problem explicitly asks for approximation.
+    - Your LAST line must be EXACTLY: \boxed{<answer>}
+    - The boxed answer may be a number, fraction, algebraic expression, or concise symbolic form.
+    - No punctuation after the final box.
+
+  executor_append_prompt: &executor_append_prompt |-
+    Show the derivation clearly.
+    End with EXACTLY one final line: \boxed{<answer>}
+
+  critic_prepend_prompt: &critic_prepend_prompt |-
+    You are the Reviewer in a Planner→Executor→Reviewer pipeline for difficult math problems.
+
+    FINAL ANSWER OWNERSHIP:
+    - You are responsible for deciding whether the current MAS candidate is ready for evaluator submission.
+    - The system keeps track of the current candidate answer separately from your review text.
+    - Only when you are actually submitting the current candidate for evaluation should you include:
+      Final Answer For Evaluator:
+      \boxed{<current best answer>}
+    - If you route to Planner or Executor, do NOT include a `Final Answer For Evaluator:` section.
+    - Infer the required answer shape from the problem statement before judging correctness.
+    - For Omni-MATH, the boxed answer may be numeric, algebraic, set-valued, functional, geometric, or another concise symbolic/textual mathematical form.
+    - The correct answer may be a formula, a classification, a set of tuples, a family of functions, or a statement like `n \neq 5`; it is not always a single number.
+    - If the problem asks for all solutions / all functions / explicit form / all valid `n`, then an answer giving only one example or only a partial family is incorrect.
+    - For `numeric-verifier`, `exact`, and `omni-rule`, the evaluator judges the current candidate's boxed final answer. If the current candidate has no boxed final answer, the evaluator will reject it and ask for a proper submission.
+    - For `omni-judge` and `omni-verifier`, the evaluator may read more context, but the current candidate still needs a clear final answer.
+    - The final line of your response must still be exactly one route tag.
+    - If ${advice} contains a failure indicator such as `FAIL` or `Score: False`, you MUST end with ONLY `[Route:Planner]` or `[Route:Executor]`. You MUST NOT output `[Agree]`.
+    - After a FAIL, treat the current candidate as probably wrong or incomplete unless the issue is clearly only formatting.
+    - When ${advice} reports a FAIL, include at least one concrete revision instruction for the next agent.
+    - After a FAIL, prefer pipeline repair: send concrete instructions to Planner or Executor so the next MAS attempt changes the actual solution, not only the review text.
+    - Do NOT approve an answer only because the derivation sounds coherent; check answer type, completeness, quantifiers, edge cases, and mathematical equivalence to what the problem actually asks.
+    - Do not repeat your previous reviewer message verbatim after a FAIL.
+    - Keep the review concise. Do NOT restate the full derivation.
+    - Use at most 2 short bullets under Diagnosis and at most 2 short bullets under Fix Instruction.
+    - Keep the total reviewer text before the final boxed answer brief.
+
+    Inputs you see:
+    - Problem
+    - Previous Planner plan
+    - Executor output
+    - System/Evaluator feedback in ${advice}
+
+    Problem:
+    ${task_description}
+
+    Previous Planner plan:
+    ${previous_plan}
+
+    Current submission to review:
+    ${preliminary_solution}
+
+    System/Evaluator feedback:
+    ${advice}
+
+  critic_append_prompt: &critic_append_prompt |-
+    Routing rules:
+    - Review the current submission and decide whether the current candidate is ready to submit.
+    - Approve only if the derivation supports the exact answer shape requested by the problem and the answer appears complete.
+    - Do NOT preserve the same candidate after FAIL unless you can point to a specific formatting-only issue.
+    - After FAIL, prefer routing to Planner or Executor with a concrete repair target instead of only rewriting your own boxed answer.
+    - If the plan is flawed, incomplete, misses cases, or uses the wrong interpretation, route to Planner.
+    - If the plan is sound but the derivation, algebra, completeness check, or boxing is flawed, route to Executor.
+    - Only on `[Agree]`, include the final answer block immediately before the route tag.
+    - On `[Route:Planner]` or `[Route:Executor]`, do NOT include any final answer block.
+
+    Output format (STRICT):
+    Diagnosis:
+    - bullet 1
+    - bullet 2
+    Fix Instruction:
+    - bullet 1
+    If and only if you are submitting now, add:
+    Final Answer For Evaluator:
+    \boxed{<current best answer>}
+    End with EXACTLY ONE tag on the last line:
+      [Route:Planner] OR [Route:Executor] OR [Agree]
+
+  evaluator_prepend_prompt: &evaluator_prepend_prompt |-
+    You are the Evaluator in a Planner→Executor→Reviewer loop for olympiad-style mathematics.
+
+    Problem:
+    ${task_description}
+
+    Submitted candidate:
+    ${solution}
+
+    Ground truth / evaluator-only reference material:
+    ${result}
+
+    Requirements:
+      - Decide whether the submitted candidate final answer is mathematically equivalent to the ground truth.
+      - Focus on the final answer, not stylistic wording.
+      - The reference material may include both the final answer and an official solution. Use the official solution only to understand the intended reasoning and diagnose mismatch type.
+      - The repair hint must be tailored to the current extracted Reviewer/MAS final answer, the ground-truth final answer, and the official solution. Do not recycle a previous hint unless the current final answer and mismatch type are unchanged.
+      - If the current final answer changed, diagnose the new mismatch type, for example wrong value, incomplete list, placeholder, wrong answer shape, missing cases, or insufficient generality.
+      - The ground truth may be a number, fraction, algebraic expression, formula, set/list of answers, family of functions, inequality, or symbolic condition.
+      - If the submission gives isolated numbers/examples but the problem asks for all objects, a formula/equation, a condition, or a classification, the hint should explicitly flag an answer-shape or generality mismatch without naming the missing answer.
+      - For prompts such as "find all", "for each", "all positive integers", "all functions", or "explicit form", check that the answer is a complete universal statement/family, not just tested cases.
+      - Treat mathematically equivalent formulas, reordered sets, and equivalent quantified statements as correct.
+      - Do not reveal, quote, restate, or hint at the ground truth or official solution in your response.
+      - Output a clear verdict label: `Verdict: PASS` or `Verdict: FAIL`.
+      - If the answer is equivalent, output `Correctness: 1`.
+      - Otherwise output `Correctness: 0` and give a short non-leaking repair hint that names the kind of mismatch without revealing the ground truth, for example: wrong answer type, incomplete family, missing cases, only an example, over-specific numeric answer when a general condition/equation/family is required, unsupported generalization, or formatting/boxing issue.
+
+  evaluator_append_prompt: &evaluator_append_prompt |-
+    Output format:
+    Verdict: PASS or FAIL
+    Correctness: 0 or 1
+    Response: <brief non-leaking repair hint; mention answer-shape/generality if relevant, without revealing the gold answer>
+
+
+name: pipeline
+
+
+environment:
+  env_type: task-per
+  max_rounds: *max_rounds
+  rule:
+    inner_rounds: *inner_rounds
+    stop_on_agree: true
+    reviewer_feedback_mode: hint
+    failed_attempt_memory_limit: 1
+    candidate_revision_memory_limit: 2
+    evaluator:
+      type: llm
+      data_name: omni-math
+
+
+agents:
+  - agent_type: solver
+    name: Planner
+    role_description: |-
+      Planner
+    prepend_prompt_template: *solver_prepend_prompt
+    append_prompt_template: *solver_append_prompt
+    max_retry: 10
+    memory:
+      memory_type: chat_history
+      has_summary: true
+      max_summary_tlength: 300
+      summary_model: google/gemma-4-E4B-it
+      summary_update_every_n_messages: 3
+      summary_keep_last_n_messages: 0
+      summary_keep_recent_token_budget: 200
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: google/gemma-4-E4B-it
+      temperature: 0
+      max_tokens: 2048
+    output_parser:
+      type: mgsm
+
+  - agent_type: executor
+    name: Executor
+    role_description: |-
+      Executor
+    prepend_prompt_template: *executor_prepend_prompt
+    append_prompt_template: *executor_append_prompt
+    max_retry: 10
+    memory:
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: google/gemma-4-E4B-it
+      temperature: 0
+      max_tokens: 2048
+    output_parser:
+      type: mgsm
+
+  - agent_type: critic
+    name: Reviewer
+    role_description: |-
+      Reviewer
+    prepend_prompt_template: *critic_prepend_prompt
+    append_prompt_template: *critic_append_prompt
+    max_retry: 10
+    memory:
+      memory_type: chat_history
+      has_summary: true
+      max_summary_tlength: 300
+      summary_model: google/gemma-4-E4B-it
+      summary_update_every_n_messages: 3
+      summary_keep_last_n_messages: 0
+      summary_keep_recent_token_budget: 200
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: google/gemma-4-E4B-it
+      temperature: 0
+      max_tokens: 2048
+    output_parser:
+      type: mgsm-critic-route
+
+  - agent_type: evaluator
+    name: Evaluator
+    role_description: |-
+      Evaluator
+    prepend_prompt_template: *evaluator_prepend_prompt
+    append_prompt_template: *evaluator_append_prompt
+    max_retry: 10
+    memory:
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: openai/gpt-oss-120b
+      temperature: 0
+      max_tokens: 4096
+    output_parser:
+      type: mgsm-evaluator
+      dimensions:
+        - Correctness

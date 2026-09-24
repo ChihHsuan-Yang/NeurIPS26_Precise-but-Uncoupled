@@ -1,0 +1,48 @@
+{
+  "total_examples": 4181,
+  "counts_by_tier": {
+    "1": 116,
+    "2": 517,
+    "3": 20,
+    "4": 1106,
+    "5": 1078,
+    "6": 497,
+    "7": 358,
+    "8": 328,
+    "9": 146,
+    "10": 15
+  },
+  "counts_by_raw_difficulty": {
+    "1.0": 116,
+    "1.5": 194,
+    "2.0": 151,
+    "2.25": 4,
+    "2.5": 168,
+    "3.0": 20,
+    "3.5": 189,
+    "3.75": 3,
+    "4.0": 530,
+    "4.25": 3,
+    "4.375": 1,
+    "4.5": 380,
+    "4.75": 12,
+    "5.0": 848,
+    "5.25": 218,
+    "5.5": 153,
+    "6.0": 241,
+    "6.25": 7,
+    "6.5": 96,
+    "6.75": 1,
+    "7.0": 357,
+    "7.5": 70,
+    "8.0": 244,
+    "8.25": 1,
+    "8.5": 13,
+    "9.0": 146,
+    "9.5": 15
+  },
+  "files": {
+    "all": "data/omni-math-2-filtered/all.jsonl",
+    "note": "Per-tier shard files (tier_01.jsonl ... tier_10.jsonl) are not shipped; every record in all.jsonl carries a `difficulty_tier` field, so the tiers are recoverable by filtering. Upstream this block held absolute paths on the authors' machine; they were replaced for the release."
+  }
+}

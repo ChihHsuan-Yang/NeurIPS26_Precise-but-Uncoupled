@@ -1,0 +1,114 @@
+# Omni-MATH Baseline LLM benchmark for the Sophia ALCF endpoint.
+# Actor-family check: use Llama 3.1 70B for the acting solver while keeping the
+# paper evaluator fixed on gpt-oss-120b.
+
+max_rounds: &max_rounds 1
+
+prompts:
+  solver_prepend_prompt: &solver_prepend_prompt |-
+    You are an experienced educator in the field of MATHEMATICS.
+
+    Problem:
+    ${task_description}
+
+    Instructions:
+    - Solve the problem directly and give your best final answer in one attempt.
+    - Infer the required answer shape from the problem statement before committing to a final answer.
+    - The final answer may be a number, fraction, algebraic formula, set/list of tuples, family of functions, condition, inequality, or symbolic statement such as `n \\neq 5`.
+    - If the problem asks for all solutions / all functions / explicit form / all valid integers, do not answer with only one example or one tested case.
+    - Prefer exact symbolic forms over decimals unless approximation is explicitly requested.
+    - Your final TWO non-empty lines MUST be exactly:
+      `Final Answer: <answer>`
+      `\\boxed{<answer>}`
+    - The final boxed line must contain ONLY `\\boxed{<answer>}` and nothing else.
+    - Do NOT wrap the final boxed answer in `\\(` `\\)` `$` `$$` `\\[` `\\]`, `\\text{}`, or any other extra formatting.
+    - Do NOT put `\\boxed{...}` on the same line as `Final Answer:`.
+    - If you do not follow this exact two-line format, the evaluator may treat the final answer as missing.
+
+  solver_append_prompt: &solver_append_prompt |-
+    Be concise but mathematically complete.
+    Do not output more than one boxed final answer.
+    Do not end with discussion text after the boxed final answer.
+    End exactly with:
+    Final Answer: <answer>
+    \boxed{<answer>}
+
+  evaluator_prepend_prompt: &evaluator_prepend_prompt |-
+    You are the Evaluator for a Baseline LLM math reasoning benchmark.
+
+    Problem:
+    ${task_description}
+
+    Solver final submission:
+    ${solution}
+
+    Ground truth / evaluator-only reference material:
+    ${result}
+
+    Requirements:
+      - Decide whether the final answer is mathematically equivalent to the ground truth.
+      - Focus on the final answer, not stylistic wording.
+      - The reference material may include both the final answer and an official solution. Use the official solution only to understand the intended reasoning and diagnose mismatch type.
+      - The repair hint must be tailored to the current extracted final answer, the ground-truth final answer, and the official solution. Do not recycle a generic hint unless the current final answer and mismatch type are unchanged.
+      - If the current final answer changed, diagnose the new mismatch type, for example wrong value, incomplete list, placeholder, wrong answer shape, missing cases, or insufficient generality.
+      - The ground truth may be a number, fraction, algebraic expression, formula, set/list of answers, family of functions, inequality, or symbolic condition.
+      - If the submission gives isolated numbers/examples but the problem asks for all objects, a formula/equation, a condition, or a classification, explicitly flag an answer-shape or generality mismatch without naming the missing answer.
+      - For prompts such as "find all", "for each", "all positive integers", "all functions", or "explicit form", check that the answer is a complete universal statement/family, not just tested cases.
+      - Treat mathematically equivalent formulas, reordered sets, and equivalent quantified statements as correct.
+      - Do not reveal, quote, restate, or hint at the ground truth or official solution in your response.
+      - Output a clear verdict label: `Verdict: PASS` or `Verdict: FAIL`.
+      - If the answer is equivalent, output `Correctness: 1`.
+      - Otherwise output `Correctness: 0` and give a short non-leaking repair hint that names the kind of mismatch without revealing the ground truth, for example: wrong answer type, incomplete family, missing cases, only an example, over-specific numeric answer when a general condition/equation/family is required, unsupported generalization, or formatting/boxing issue.
+
+  evaluator_append_prompt: &evaluator_append_prompt |-
+    Output format:
+    Verdict: PASS or FAIL
+    Correctness: 0 or 1
+    Response: <brief non-leaking repair hint; mention answer-shape/generality if relevant, without revealing the gold answer>
+
+name: baseline-llm
+
+environment:
+  env_type: task-single-llm-benchmark
+  max_rounds: *max_rounds
+  rule:
+    reviewer_feedback_mode: plain
+    evaluator:
+      type: llm
+
+agents:
+  - agent_type: solver
+    name: Solo
+    role_description: |-
+      BaselineLLM
+    prepend_prompt_template: *solver_prepend_prompt
+    append_prompt_template: *solver_append_prompt
+    max_retry: 10
+    memory:
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: google/gemma-3-27b-it
+      temperature: 0
+      max_tokens: 2048
+    output_parser:
+      type: dummy
+
+  - agent_type: evaluator
+    name: Evaluator
+    role_description: |-
+      Evaluator
+    prepend_prompt_template: *evaluator_prepend_prompt
+    append_prompt_template: *evaluator_append_prompt
+    max_retry: 10
+    memory:
+      memory_type: chat_history
+    llm:
+      llm_type: gpt-3.5-turbo
+      model: openai/gpt-oss-120b
+      temperature: 0
+      max_tokens: 4096
+    output_parser:
+      type: mgsm-evaluator
+      dimensions:
+        - Correctness

@@ -1,0 +1,6 @@
+name: per_6_inner_rounds_hint_llm
+task_name: paper/per_6_inner_rounds_hint_llm
+dataset_loader: omni-math
+dataset_path: data/omni-math-2-filtered/all.jsonl
+trace_tag: per_6_inner_rounds_hint_llm
+artifact_tag: per_6_inner_rounds_hint_llm

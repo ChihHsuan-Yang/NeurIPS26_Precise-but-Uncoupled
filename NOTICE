@@ -1,0 +1,125 @@
+Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake
+in Multi-Agent Math Reasoning
+Copyright 2026 UChicago Argonne, LLC, Operator of Argonne National Laboratory,
+and the authors listed in CITATION.cff.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+these files except in compliance with the License. You may obtain a copy of the
+License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
+specific language governing permissions and limitations under the License.
+
+================================================================================
+DERIVATIVE WORK NOTICE  (Apache-2.0 section 4(b))
+================================================================================
+
+This work is a DERIVATIVE of AgentVerse.
+
+    AgentVerse
+    Copyright (c) OpenBMB and the AgentVerse authors
+    https://github.com/OpenBMB/AgentVerse
+    Licensed under the Apache License, Version 2.0
+
+    @article{chen2023agentverse,
+      title   = {AgentVerse: Facilitating Multi-Agent Collaboration and
+                 Exploring Emergent Behaviors in Agents},
+      author  = {Chen, Weize and Su, Yusheng and Zuo, Jingwei and Yang, Cheng and
+                 Yuan, Chenfei and Qian, Chen and Chan, Chi-Min and Qin, Yujia and
+                 Lu, Yaxi and Xie, Ruobing and Liu, Zhiyuan and Sun, Maosong and
+                 Zhou, Jie},
+      journal = {arXiv preprint arXiv:2308.10848},
+      year    = {2023}
+    }
+
+The intermediate repository from which this release was extracted squashed the
+upstream git history into a single "Initial import" commit, so per-file upstream
+authorship is not recoverable from version control. This NOTICE is therefore the
+attribution channel Apache-2.0 section 4(b) requires, and the list of
+modifications below is deliberately explicit.
+
+MODIFICATIONS MADE BY THE AUTHORS OF THIS WORK
+----------------------------------------------
+Added (this paper's contribution):
+  * The PER protocol environment and rules
+    (agentverse/environments/tasksolving_env/per.py and rules/per.py,
+     rules/evaluator/per.py).
+  * The broadcast-deliberation protocol with confidence polling and an approval
+    phase (environments/tasksolving_env/broadcast_deliberation.py and its rule).
+  * The single-agent-reflect and single-LLM-benchmark environments used as the
+    matched baselines.
+  * The deliberator agent, the failure-memory rule, and the Omni-MATH output
+    parsers (mgsm, mgsm-evaluator, mgsm-critic-route, mgsm-critic-agree).
+  * The entire trace-metrics layer: agentverse/metrics/** and the RQ analysis
+    entry points in agentverse_command/ that compute the paper's process metrics
+    (reviewer precision, CouplingRate, ReviewerGuidedRepairRate, the inner-loop
+    transition decomposition, and the strict-coupling audit).
+  * The evaluator contract in agentverse/evaluation/**.
+  * The benchmark harness agentverse_command/benchmark.py and config resolution.
+  * The 2x5 symmetric-transition pipeline in src/precise_uncoupled/process/.
+
+Changed relative to upstream AgentVerse:
+  * The OpenAI client (agentverse/llms/openai.py) was extended with retry,
+    rate-limit backoff and per-example token accounting.
+  * Per-example resource accounting was fixed so counters reset between
+    problems (see docs/LIMITATIONS.md -- the legacy pre-fix values are withdrawn).
+
+Changed FOR THIS RELEASE specifically (not present in the research repository):
+  * Author-private absolute default paths were replaced with repository-relative,
+    environment-overridable ones.
+  * Facility-specific endpoint workarounds were made generic and opt-in; no
+    endpoint URL, hostname, token or credential ships here.
+  * Import-time side effects that wrote log files into the source tree were made
+    opt-in.
+  Every such edit is marked with a "RELEASE PATCH" comment in the source and is
+  listed in docs/PROVENANCE.md.
+
+Removed relative to upstream AgentVerse:
+  * The simulation half of AgentVerse (simulation environments and agents, the
+    Gradio GUI and demo, tool-using executors) and the BMTools integration. None
+    is used by this paper; see docs/PROVENANCE.md for the complete list.
+
+================================================================================
+BENCHMARK DATA
+================================================================================
+
+data/omni-math-2-filtered/ is a filtered subset of Omni-MATH 2, itself a cleaned
+and filtered version of Omni-MATH. Both public dataset cards list MIT licensing.
+Credit is due to the authors of both benchmarks.
+
+    Omni-MATH    https://huggingface.co/datasets/omniomni/omni-math
+    Omni-MATH-2  https://huggingface.co/datasets/martheballon/Omni-MATH-2
+
+    @article{gao2024omnimath,
+      title   = {Omni-MATH: A Universal Olympiad Level Mathematic Benchmark for
+                 Large Language Models},
+      author  = {Gao, Bofei and Song, Feifan and Yang, Zhe and Cai, Zefan and
+                 Miao, Yibo and Dong, Qingxiu and Li, Lei and Ma, Chenghao and
+                 Chen, Liang and Xu, Runxin and Tang, Zhengyang and Wang, Benyou
+                 and Zan, Daoguang and Quan, Shanghaoran and Zhang, Ge and
+                 Sha, Lei and Zhang, Yichang and Ren, Xuancheng and Liu, Tianyu
+                 and Chang, Baobao},
+      journal = {arXiv preprint arXiv:2410.07985},
+      year    = {2024}
+    }
+
+================================================================================
+MODELS
+================================================================================
+
+No model weights are trained, fine-tuned or distributed by this work. All models
+used are public third-party checkpoints, obtained and served by the user:
+
+    openai/gpt-oss-120b          Apache-2.0   actor and evaluator (primary)
+    google/gemma-3-27b-it        Gemma Terms  second actor family (appendix)
+    meta-llama/Meta-Llama-3.1-70B-Instruct
+                                 Llama 3.1 Community License
+                                             replay evaluator (robustness)
+    KbsdJames/Omni-Judge         see card    OPTIONAL, not on the default path
+
+Each is governed by its own upstream licence, which this release does not alter
+and does not redistribute.
