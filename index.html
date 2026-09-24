@@ -45,6 +45,115 @@
 <link rel="icon" href="static/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="static/apple-touch-icon.png">
 <link rel="stylesheet" href="static/site.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "ScholarlyArticle",
+ "headline": "Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning",
+ "name": "Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning",
+ "author": [
+  {
+   "@type": "Person",
+   "name": "Chih-Hsuan Yang",
+   "affiliation": {
+    "@type": "Organization",
+    "name": "Argonne National Laboratory"
+   }
+  },
+  {
+   "@type": "Person",
+   "name": "Jingyan Jiang",
+   "affiliation": {
+    "@type": "Organization",
+    "name": "Argonne National Laboratory"
+   }
+  },
+  {
+   "@type": "Person",
+   "name": "Vikram Vasudevan",
+   "affiliation": {
+    "@type": "Organization",
+    "name": "Oregon State University"
+   }
+  },
+  {
+   "@type": "Person",
+   "name": "Cheng-Hau Yang",
+   "affiliation": {
+    "@type": "Organization",
+    "name": "Argonne National Laboratory"
+   }
+  },
+  {
+   "@type": "Person",
+   "name": "Huihuo Zheng",
+   "affiliation": {
+    "@type": "Organization",
+    "name": "Argonne National Laboratory"
+   }
+  },
+  {
+   "@type": "Person",
+   "name": "Le Chen",
+   "affiliation": {
+    "@type": "Organization",
+    "name": "Argonne National Laboratory"
+   }
+  },
+  {
+   "@type": "Person",
+   "name": "Eliu A. Huerta",
+   "affiliation": {
+    "@type": "Organization",
+    "name": "Argonne National Laboratory"
+   }
+  },
+  {
+   "@type": "Person",
+   "name": "Venkatram Vishwanath",
+   "affiliation": {
+    "@type": "Organization",
+    "name": "Argonne National Laboratory"
+   }
+  },
+  {
+   "@type": "Person",
+   "name": "Ian T. Foster",
+   "affiliation": {
+    "@type": "Organization",
+    "name": "Argonne National Laboratory"
+   }
+  },
+  {
+   "@type": "Person",
+   "name": "Rajeev Thakur",
+   "affiliation": {
+    "@type": "Organization",
+    "name": "Argonne National Laboratory"
+   }
+  }
+ ],
+ "datePublished": "2026-07-16",
+ "identifier": "arXiv:2607.15388",
+ "sameAs": [
+  "https://arxiv.org/abs/2607.15388",
+  "https://doi.org/10.48550/arXiv.2607.15388"
+ ],
+ "url": "https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/",
+ "mainEntityOfPage": "https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/",
+ "creativeWorkStatus": "Preprint",
+ "abstract": "Reviewer detection quality and successful critique uptake are empirically separable: a multi-agent protocol can identify errors accurately and still fail to incorporate the critique into the next candidate or convert it into a successful repair.",
+ "keywords": "multi-agent systems, large language models, mathematical reasoning, agent evaluation, critique uptake",
+ "codeRepository": "https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled",
+ "isBasedOn": "https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled",
+ "associatedMedia": {
+  "@type": "Dataset",
+  "name": "NeurIPS26 Precise but Uncoupled — protocol traces and process metrics",
+  "url": "https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled",
+  "license": "https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled/blob/main/LICENSE"
+ }
+}
+</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -320,7 +429,7 @@
     <p>Two probes change only how critique reaches the solver, holding model family, reviewer setup and outer-loop budget fixed. Forcing the solver to acknowledge critique explicitly (<strong>ACK-required</strong>) <em>lowers</em> final accuracy, from 85.2% to 82.5%, and roughly doubles NeglectRate (0.488&nbsp;&rarr;&nbsp;0.792). Embedding reviewer guidance directly in the solver's working context (<strong>EMB</strong>) partially recovers, to 86.3%, without closing the gap to broadcast's 89.2%.</p>
 
     <figure class="tall">
-      <img src="static/figures/fig_coupling_intervention_panel_a.png" width="946" height="895" alt="Bar chart of final outcomes for four conditions, each showing FinalPassRate in a solid bar and Pass@1 in a lighter bar. PER base 85.2% and 72.8%; PER plus ACK 82.5% and 71.0%; PER plus EMB 86.3% and 74.5%; broadcast 89.2% and 78.6%.">
+      <img src="static/figures/fig_coupling_intervention_panel_a.png" srcset="static/figures/fig_coupling_intervention_panel_a.png 1x, static/figures/fig_coupling_intervention_panel_a@2x.png 2x" width="946" height="895" loading="lazy" decoding="async" alt="Bar chart of final outcomes for four conditions, each showing FinalPassRate in a solid bar and Pass@1 in a lighter bar. PER base 85.2% and 72.8%; PER plus ACK 82.5% and 71.0%; PER plus EMB 86.3% and 74.5%; broadcast 89.2% and 78.6%.">
       <figcaption><span class="figno">Figure&nbsp;4(a).</span> Within-PER intervention outcomes over the full benchmark (N&nbsp;=&nbsp;4,181). ACK-required lowers FinalPassRate and Pass@1; EMB partially recovers both. <strong>Only panel (a) of the paper's Figure&nbsp;4 is shown here.</strong> Panel&nbsp;(b) of the published figure plots CouplingRate values that could not be reconstructed from the released aggregates, so it is omitted here. The verified values are Table&nbsp;14's <strong>0.200 (ACK)</strong> and <strong>0.247 (EMB)</strong>, given in the table below.</figcaption>
     </figure>
 
