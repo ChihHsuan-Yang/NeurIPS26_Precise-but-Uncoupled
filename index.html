@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Precise but Uncoupled — Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning</title>
+<meta name="description" content="Project page for the preprint &quot;Precise but Uncoupled&quot; (arXiv:2607.15388, cs.AI). On 4,181 Omni-MATH problems with matched gpt-oss-120b actors, reviewer detection quality and successful critique uptake are empirically separable: a planner-executor-reviewer pipeline has the more precise reviewer (0.861 vs 0.644) yet verified useful critique changes its next candidate far less often.">
+<meta name="author" content="Chih-Hsuan Yang, Jingyan Jiang, Vikram Vasudevan, Cheng-Hau Yang, Huihuo Zheng, Le Chen, Eliu A. Huerta, Venkatram Vishwanath, Ian T. Foster, Rajeev Thakur">
+<link rel="canonical" href="https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Precise but Uncoupled">
+<meta property="og:title" content="Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning">
+<meta property="og:description" content="On 4,181 verifier-grounded Omni-MATH problems with matched gpt-oss-120b actors, reviewer detection quality and successful critique uptake are empirically separable. Preprint, arXiv:2607.15388 [cs.AI].">
+<meta property="og:url" content="https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/">
+<meta property="og:image" content="https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/static/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Title card: Precise but Uncoupled, arXiv:2607.15388. Three figures: reviewer precision 0.861; useful critique changes the next candidate 0.336; reviewer-guided repair 0.051.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning">
+<meta name="twitter:description" content="Reviewer detection quality and successful critique uptake are empirically separable. 4,181 Omni-MATH problems, matched gpt-oss-120b actors. Preprint, arXiv:2607.15388 [cs.AI].">
+<meta name="twitter:image" content="https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/static/og-card.png">
+<meta name="twitter:image:alt" content="Title card: Precise but Uncoupled, arXiv:2607.15388. Three figures: reviewer precision 0.861; useful critique changes the next candidate 0.336; reviewer-guided repair 0.051.">
+
+<meta name="citation_title" content="Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning">
+<meta name="citation_author" content="Yang, Chih-Hsuan">
+<meta name="citation_author" content="Jiang, Jingyan">
+<meta name="citation_author" content="Vasudevan, Vikram">
+<meta name="citation_author" content="Yang, Cheng-Hau">
+<meta name="citation_author" content="Zheng, Huihuo">
+<meta name="citation_author" content="Chen, Le">
+<meta name="citation_author" content="Huerta, Eliu A.">
+<meta name="citation_author" content="Vishwanath, Venkatram">
+<meta name="citation_author" content="Foster, Ian T.">
+<meta name="citation_author" content="Thakur, Rajeev">
+<meta name="citation_publication_date" content="2026/07/16">
+<meta name="citation_arxiv_id" content="2607.15388">
+<meta name="citation_doi" content="10.48550/arXiv.2607.15388">
+<meta name="citation_pdf_url" content="https://arxiv.org/pdf/2607.15388">
+<meta name="citation_abstract_html_url" content="https://arxiv.org/abs/2607.15388">
+
+<link rel="icon" href="static/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="static/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="static/apple-touch-icon.png">
+<link rel="stylesheet" href="static/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ==================== 1. HERO ==================== -->
+<header class="hero">
+  <div class="wrap">
+    <p class="badge">Preprint · arXiv:2607.15388 [cs.AI]</p>
+    <h1>Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning</h1>
+    <p class="subtitle">A protocol can be good at spotting errors and still not act on them.</p>
+
+    <p class="finding">On 4,181 verifier-grounded Omni-MATH problems with matched <code>gpt-oss-120b</code> actors, the planner&ndash;executor&ndash;reviewer pipeline has the <strong>more precise reviewer (0.861 vs.&nbsp;0.644)</strong>, yet evaluator-verified useful critique changes the candidate it carries forward only <strong>33.6%</strong> of the time versus <strong>93.5%</strong> under broadcast deliberation &mdash; so reviewer detection quality and critique uptake are <strong>empirically separable</strong>.</p>
+
+    <p class="authors">
+      <span class="au"><a href="mailto:bellayang@anl.gov">Chih-Hsuan Yang</a><sup>1,&#42;</sup></span>,
+      <span class="au">Jingyan Jiang<sup>1</sup></span>,
+      <span class="au">Vikram Vasudevan<sup>2</sup></span>,
+      <span class="au">Cheng-Hau Yang<sup>1</sup></span>,
+      <span class="au">Huihuo Zheng<sup>1</sup></span>,
+      <span class="au">Le Chen<sup>1</sup></span>,
+      <span class="au">Eliu A. Huerta<sup>1,3</sup></span>,
+      <span class="au">Venkatram Vishwanath<sup>1</sup></span>,
+      <span class="au">Ian T. Foster<sup>1,3</sup></span>,
+      <span class="au">Rajeev Thakur<sup>1</sup></span>
+    </p>
+    <p class="affils">
+      <span><sup>1</sup>Argonne National Laboratory</span>
+      <span><sup>2</sup>Oregon State University</span>
+      <span><sup>3</sup>University of Chicago</span>
+      <span><sup>&#42;</sup>Corresponding author</span>
+    </p>
+    <p class="venue">Preprint. arXiv:2607.15388 [cs.AI], v1, 16&nbsp;July&nbsp;2026. Submitted to NeurIPS&nbsp;2026.</p>
+
+    <!-- ==================== 2. RESOURCE BUTTONS ==================== -->
+    <nav class="actions" aria-label="Paper and artifact links">
+      <a class="primary" href="https://arxiv.org/abs/2607.15388">
+        <svg class="ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4 2h8l4 4v12a0 0 0 0 1 0 0H4a0 0 0 0 1 0 0V2Zm7 1.5V7h3.5L11 3.5ZM6 10h8v1.4H6V10Zm0 3h8v1.4H6V13Z"/></svg>
+        Paper (arXiv)
+      </a>
+      <a href="https://arxiv.org/pdf/2607.15388">
+        <svg class="ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10 2v9.2l3.1-3.1 1 1L10 13.4 5.9 9.1l1-1L10 11.2V2h0Zm-6 14h12v1.6H4V16Z"/></svg>
+        PDF
+      </a>
+      <a href="https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled">
+        <svg class="ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10 1a9 9 0 0 0-2.85 17.54c.45.08.62-.2.62-.44v-1.5c-2.5.55-3.03-1.2-3.03-1.2-.41-1.05-1-1.33-1-1.33-.82-.56.06-.55.06-.55.9.07 1.38.94 1.38.94.8 1.38 2.11.98 2.62.75.08-.59.32-.98.57-1.2-1.99-.23-4.09-1-4.09-4.45 0-.98.35-1.79.93-2.42-.1-.23-.4-1.15.08-2.4 0 0 .76-.24 2.48.92a8.6 8.6 0 0 1 4.52 0c1.72-1.16 2.47-.92 2.47-.92.49 1.25.18 2.17.09 2.4.58.63.92 1.44.92 2.42 0 3.46-2.1 4.22-4.1 4.44.33.28.61.83.61 1.67v2.47c0 .24.16.52.63.44A9 9 0 0 0 10 1Z"/></svg>
+        Code (GitHub)
+      </a>
+      <a href="https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled">
+        <svg class="ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10 2c3.6 0 6.5 1.2 6.5 2.7v10.6C16.5 16.8 13.6 18 10 18s-6.5-1.2-6.5-2.7V4.7C3.5 3.2 6.4 2 10 2Zm0 1.5c-2.9 0-5 .8-5 1.2s2.1 1.3 5 1.3 5-.9 5-1.3-2.1-1.2-5-1.2Zm5 3.3c-1.2.6-3 1-5 1s-3.8-.4-5-1v2.5c0 .4 2.1 1.2 5 1.2s5-.8 5-1.2V6.8Zm0 4.6c-1.2.6-3 1-5 1s-3.8-.4-5-1v3.9c0 .4 2.1 1.2 5 1.2s5-.8 5-1.2v-3.9Z"/></svg>
+        Dataset (Hugging&nbsp;Face)
+      </a>
+      <a href="#citation">
+        <svg class="ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M7.4 4.2 5.8 9.3h2.4v6.5H2.6V9.9l2-5.7h2.8Zm9 0-1.6 5.1h2.4v6.5h-5.6V9.9l2-5.7h2.8Z"/></svg>
+        Cite
+      </a>
+    </nav>
+    <p class="actions-note">The GitHub repository and the Hugging&nbsp;Face dataset are made public at the moment of release; if a link returns 404 or 401, publication has not completed yet. No trained model is part of this project &mdash; there is no model card, because no model was trained.</p>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ==================== ABSTRACT ==================== -->
+<section id="abstract">
+  <div class="wrap">
+    <h2><span class="num">00</span>Abstract</h2>
+    <p>Many math- and science-oriented agent systems use hierarchical designs with specialized reviewer roles, assuming that a dedicated review stage should help turn wrong candidates into correct ones. We test this assumption on 4,181 verifier-grounded Omni-MATH problems using matched gpt-oss-120b actors. Collaboration adds little on the easiest tiers, but from tier 4 onward the gains open sharply; in this harder regime, broadcast-style peer discussion reaches higher final accuracy than a planner-executor-reviewer pipeline (PER). We ask whether this gap is explained by reviewer quality or by whether critique changes the next answer the protocol carries forward. It is not explained by reviewer precision alone: PER's reviewer is more precise than broadcast's (0.861 vs. 0.644), yet evaluator-verified useful critique is much less likely to change the next candidate and produces lower reviewer-guided repair. These results show that reviewer detection quality and critique uptake are empirically separable. Within matched PER interventions, forcing explicit acknowledgment lowers final accuracy, while embedding reviewer guidance directly in the solver's working context partially improves follow-through without closing the gap. Overall, reviewer-centric evaluation can overstate system quality: a protocol may spot errors well yet still fail to solve more problems if it does not act on those critiques.</p>
+    <p style="font-size:.85rem;color:var(--muted);margin-bottom:0;">Abstract as published in the arXiv&nbsp;v1 metadata record. The PDF's own abstract is slightly longer; where they differ, the downloadable artifact is <a href="https://arxiv.org/abs/2607.15388">arXiv&nbsp;v1</a>.</p>
+  </div>
+</section>
+
+<!-- ==================== 3. MOTIVATION ==================== -->
+<section id="motivation">
+  <div class="wrap">
+    <h2><span class="num">01</span>Why precise review need not produce repair</h2>
+    <p class="lead">Many math- and science-oriented agent systems add a dedicated reviewer role, on the assumption that routing critique through a review stage turns wrong candidates into correct ones. That assumption bundles two separate things together.</p>
+
+    <p>A reviewer role has to do two jobs, and they can be measured apart:</p>
+    <ol>
+      <li><strong>Detection</strong> &mdash; does a reviewer warning actually point at a real error? That is <em>reviewer precision</em>.</li>
+      <li><strong>Uptake and repair</strong> &mdash; once critique is verified useful, does the protocol change the next candidate it carries forward, and does that change fix the answer?</li>
+    </ol>
+
+    <p>Reviewer-centric evaluation measures the first and treats the second as implied. This paper measures both and finds they come apart: the protocol with the better reviewer is the one that acts on critique less. The reason is structural rather than a property of the critique text &mdash; it is about where the critique lands and who has to agree before an answer is submitted.</p>
+
+    <h3>The structural contrast</h3>
+    <p>Two protocols differ in how critique reaches the answer. The rows below are the paper's Figure&nbsp;1, re-rendered here as text.</p>
+
+    <div class="contrast">
+      <div class="contrast-head">
+        <div class="c-per">PER: critique is routed, but can remain non-binding</div>
+        <div class="c-bc">Broadcast: critique is shared, and approval is collective</div>
+      </div>
+      <div class="contrast-row">
+        <div class="c-per"><span class="lbl">PER</span><span class="flow">Planner &rarr; Executor &rarr; Reviewer</span></div>
+        <div class="c-bc"><span class="lbl">Broadcast</span><span class="flow">Peer discussion &harr; shared candidate</span></div>
+      </div>
+      <div class="contrast-row">
+        <div class="c-per"><span class="lbl">PER</span>Reviewer signal enters a separable <code>advice</code> field</div>
+        <div class="c-bc"><span class="lbl">Broadcast</span>Critique enters the shared deliberation state</div>
+      </div>
+      <div class="contrast-row">
+        <div class="c-per"><span class="lbl">PER</span>Solver can acknowledge the signal yet preserve the candidate</div>
+        <div class="c-bc"><span class="lbl">Broadcast</span>Every peer sees the same candidate before submission</div>
+      </div>
+      <div class="contrast-row">
+        <div class="c-per"><span class="lbl">PER</span>Submission decision is role-local after routed review</div>
+        <div class="c-bc"><span class="lbl">Broadcast</span>Submission requires collective re-approval</div>
+      </div>
+    </div>
+    <p style="font-size:.89rem;color:var(--muted);margin-top:12px;max-width:78ch;">Re-rendering of Figure&nbsp;1, <em>Why reviewer quality and realized repair can diverge.</em> In PER, information flow and decision flow can separate: a reviewer can send a correct warning without changing the next candidate. In broadcast, critique is embedded in shared candidate state and group approval, making bypass harder by design.</p>
+
+    <div class="warning">
+      <p><strong>What this contrast is not.</strong> PER and broadcast are complete protocol designs that differ in several ways at once &mdash; routing, shared state, feedback delivery, prompts, and round structure. This is a configuration-level difference, not an isolated manipulation of any single mechanism. In particular, the approval gate cannot be isolated with the available toggle, so no causal claim is made about it. See <a href="#limitations">Limitations</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. METHOD ==================== -->
+<section id="method" class="tint">
+  <div class="wrap">
+    <h2><span class="num">02</span>Method: four protocols, and a three-step decomposition</h2>
+    <p class="lead">Every protocol solves the same 4,181 problems with the same model, the same evaluator contract, the same outer-loop budget, and the same memory reset policy. What varies is the collaboration structure.</p>
+
+    <h3>The protocol ladder</h3>
+    <div class="table-scroll" tabindex="0" role="group" aria-label="Matched protocol knobs, paper Table 12, scrollable table">
+      <table class="min-wide">
+        <caption>Matched protocol knobs (paper Table&nbsp;12).</caption>
+        <thead>
+          <tr><th scope="col">Protocol</th><th scope="col">Outer budget</th><th scope="col">Pre-submission structure</th><th scope="col">Feedback surface</th><th scope="col">Submission gate</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Baseline LLM</th><td>1 attempt</td><td>None</td><td>Evaluator pass/fail only</td><td>Direct one-shot submission</td></tr>
+          <tr><th scope="row">Single-Agent Iterative</th><td>Up to 3</td><td>No reviewer; question-scoped repair ledgers reused across retries</td><td>Hinted evaluator feedback plus prior answer</td><td>Same solver resubmits after each failure</td></tr>
+          <tr><th scope="row">PER</th><td>Up to 3</td><td>2 inner rounds per attempt: Planner&rarr;Executor&rarr;Reviewer</td><td>Critique routed through separable <code>advice</code> fields</td><td>Reviewer routes back or approves; decision is role-local</td></tr>
+          <tr><th scope="row">Broadcast</th><td>Up to 3</td><td>4 discussion rounds plus up to 2 approval rounds</td><td>Shared candidate state, shared peer history, hinted evaluator feedback</td><td>Unanimous re-approval before submission</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
+
+    <h3>Detection &rarr; uptake &rarr; repair</h3>
+    <p>Rather than compare only final accuracy, each review episode is decomposed into three measurable steps. Every step is grounded in the evaluator's verdict on the answers involved, not in a judgement about the wording of the critique.</p>
+
+    <div class="pipeline">
+      <svg viewBox="0 0 880 208" role="img" aria-labelledby="pipe-t pipe-d" preserveAspectRatio="xMidYMid meet">
+        <title id="pipe-t">Three-step decomposition of a review episode</title>
+        <desc id="pipe-d">A review episode flows through three gates. Step 1, detection: does the reviewer warning point at a real error, measured as reviewer precision. Step 2, uptake: does the next candidate the protocol carries forward actually change, measured as CouplingRate. Step 3, repair: is the changed answer now correct, measured as ReviewerGuidedRepairRate. Each gate can drop the episode, so a protocol can pass step one and still fail overall.</desc>
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#5b6b7f"/>
+          </marker>
+        </defs>
+        <rect x="2" y="44" width="176" height="86" rx="9" fill="#ffffff" stroke="#e4e9f0" stroke-width="1.5"/>
+        <text x="90" y="74" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1a2330">Review episode</text>
+        <text x="90" y="96" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" fill="#5b6b7f">reviewer asks for</text>
+        <text x="90" y="113" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" fill="#5b6b7f">a revision</text>
+        <line x1="182" y1="87" x2="212" y2="87" stroke="#5b6b7f" stroke-width="1.8" marker-end="url(#ar)"/>
+
+        <rect x="216" y="30" width="196" height="114" rx="9" fill="#ffffff" stroke="#2E7D32" stroke-width="2"/>
+        <text x="232" y="54" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="700" fill="#2E7D32" letter-spacing="0.5">STEP 1 · DETECTION</text>
+        <text x="232" y="78" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1a2330">Is the warning real?</text>
+        <text x="232" y="99" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" fill="#5b6b7f">the flagged candidate is</text>
+        <text x="232" y="116" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" fill="#5b6b7f">in fact wrong</text>
+        <text x="232" y="136" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11.5" fill="#2E7D32" font-weight="700">Precision</text>
+        <line x1="416" y1="87" x2="446" y2="87" stroke="#5b6b7f" stroke-width="1.8" marker-end="url(#ar)"/>
+
+        <rect x="450" y="30" width="196" height="114" rx="9" fill="#ffffff" stroke="#b04a12" stroke-width="2"/>
+        <text x="466" y="54" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="700" fill="#b04a12" letter-spacing="0.5">STEP 2 · UPTAKE</text>
+        <text x="466" y="78" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1a2330">Did the answer move?</text>
+        <text x="466" y="99" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" fill="#5b6b7f">the next candidate the</text>
+        <text x="466" y="116" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" fill="#5b6b7f">protocol carries differs</text>
+        <text x="466" y="136" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11.5" fill="#b04a12" font-weight="700">CouplingRate</text>
+        <line x1="650" y1="87" x2="680" y2="87" stroke="#5b6b7f" stroke-width="1.8" marker-end="url(#ar)"/>
+
+        <rect x="684" y="30" width="194" height="114" rx="9" fill="#ffffff" stroke="#b04a12" stroke-width="2"/>
+        <text x="700" y="54" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="11" font-weight="700" fill="#b04a12" letter-spacing="0.5">STEP 3 · REPAIR</text>
+        <text x="700" y="78" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="14" font-weight="700" fill="#1a2330">Is it now correct?</text>
+        <text x="700" y="99" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" fill="#5b6b7f">the changed answer</text>
+        <text x="700" y="116" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" fill="#5b6b7f">passes the evaluator</text>
+        <text x="700" y="136" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11.5" fill="#b04a12" font-weight="700">ReviewerGuidedRepairRate</text>
+
+        <text x="440" y="180" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" fill="#5b6b7f">Each gate can drop an episode. A protocol can pass step&nbsp;1 more often than another and still</text>
+        <text x="440" y="198" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="12.5" fill="#5b6b7f">reach step&nbsp;3 far less often. That gap is what this paper measures.</text>
+      </svg>
+    </div>
+    <p style="font-size:.89rem;color:var(--muted);margin-top:12px;max-width:78ch;">Every measurement is an <em>operational answer-transition</em> statistic: whether the answer string the protocol carries forward changed, and whether the evaluator judges the new one correct. None of it is a judgement about whether the solver understood, ignored, or deprioritised the critique &mdash; that would require semantic labelling this work does not have.</p>
+
+    <h3>Setting</h3>
+    <dl class="meta-grid">
+      <dt>Benchmark</dt><dd>Omni-MATH&nbsp;2 (filtered), <strong>N&nbsp;=&nbsp;4,181</strong> competition-level problems in ten benchmark-provided difficulty tiers. Tiers 3 (n&nbsp;=&nbsp;20) and 10 (n&nbsp;=&nbsp;15) are small and are marked wherever they appear.</dd>
+      <dt>Actors</dt><dd><code>openai/gpt-oss-120b</code> for every acting role &mdash; planner, executor/solver, reviewer, peers.</dd>
+      <dt>Evaluator</dt><dd><code>openai/gpt-oss-120b</code>, the same checkpoint, held fixed across all cells.</dd>
+      <dt>Decoding</dt><dd>Temperature&nbsp;0 throughout. <strong>No seed is available</strong> &mdash; the hosted endpoint runtime is not frozen and exposes none, so live re-runs are independent executions.</dd>
+      <dt>Serving</dt><dd>OpenAI-compatible server on public GPU-backed HPC infrastructure (ALCF).</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- ==================== 5. MAIN FINDINGS ==================== -->
+<section id="findings">
+  <div class="wrap">
+    <h2><span class="num">03</span>Main findings</h2>
+
+    <div class="scope">
+      <p><strong>Scope of this section.</strong> Everything under <em>Primary result</em> is the paper's own setting: Omni-MATH&nbsp;2 filtered, N&nbsp;=&nbsp;4,181, actor <em>and</em> evaluator both <code>openai/gpt-oss-120b</code>, temperature&nbsp;0. The <em>Post-rebuttal robustness</em> block that follows is separate supplementary evidence over five benchmarks and two actor families; it is <strong>not</strong> the paper's main claim and is labelled as such throughout.</p>
+    </div>
+
+    <h3>Primary result: precision and uptake come apart</h3>
+    <div class="keynums">
+      <div class="keynum">
+        <b>0.861</b>
+        <span class="k-label">PER reviewer precision</span>
+        <span class="k-scope">vs. 0.644 for broadcast. PER's reviewer is the better detector.</span>
+      </div>
+      <div class="keynum warm">
+        <b>0.336</b>
+        <span class="k-label">PER CouplingRate</span>
+        <span class="k-scope">vs. 0.935 for broadcast. Verified useful critique changes PER's next candidate about a third of the time.</span>
+      </div>
+      <div class="keynum warm">
+        <b>0.051</b>
+        <span class="k-label">PER reviewer-guided repair</span>
+        <span class="k-scope">vs. 0.286 for broadcast &mdash; 5.6&#215; lower realized repair.</span>
+      </div>
+    </div>
+    <p style="font-size:.82rem;color:var(--muted);margin-top:4px;">Paper Table&nbsp;11, review-conditioned decomposition. N&nbsp;=&nbsp;4,181; 10,804 PER and 11,587 broadcast review instances.</p>
+
+    <figure class="wide">
+      <div class="fig-scroll" tabindex="0" role="group" aria-label="Figure 3, inner-loop coupling, scrollable figure">
+        <img src="static/figures/fig_inner_loop_coupling.svg" width="1425" height="490" alt="Two panels. Left, a stacked bar chart of inner-loop failure modes over wrong-initial-candidate cases: PER splits 11% repair, 49% neglect, 40% try-but-fail, while broadcast splits 26% repair, 26% neglect, 48% try-but-fail — 2.3 times more neglect under PER. Right, a grouped bar chart of five metrics for PER and broadcast: precision 0.86 versus 0.64, recall 0.75 versus 0.87, CouplingRate 0.34 versus 0.93, guided repair 0.05 versus 0.29, misleading resistance 0.92 versus 0.71. A shaded box marks CouplingRate and guided repair as the coupling gap.">
+      </div>
+      <figcaption><span class="figno">Figure&nbsp;3.</span> <strong>What observable process difference tracks the PER&ndash;broadcast gap?</strong> Not reviewer precision alone, but whether evaluator-verified useful critique changes the next candidate the protocol carries forward. <strong>Left:</strong> NeglectRate is the dominant inner-loop failure mode for PER (48.8% of wrong-initial-candidate cases neglect available critique), while TryButFailRate is much closer across protocols. <strong>Right:</strong> the aggregate metrics show the core paradox &mdash; PER has <em>higher</em> reviewer precision (0.861 vs.&nbsp;0.644), yet verified useful critique changes the next candidate only 33.6% of the time under PER versus 93.5% under broadcast, and reviewer-guided repair is correspondingly 5.6&#215; lower (5.1% vs.&nbsp;28.6%).</figcaption>
+    </figure>
+
+    <div class="table-scroll" tabindex="0" role="group" aria-label="Review-conditioned decomposition, paper Table 11, scrollable table">
+      <table class="min-wide">
+        <caption>Review-conditioned decomposition (paper Table&nbsp;11), N&nbsp;=&nbsp;4,181.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Protocol</th>
+            <th scope="col" class="num">Precision</th>
+            <th scope="col" class="num">Recall</th>
+            <th scope="col" class="num">Coupling&shy;Rate</th>
+            <th scope="col" class="num">Reviewer-guided repair</th>
+            <th scope="col" class="num">Misleading resistance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">PER (role-based)</th><td class="num">0.861</td><td class="num">0.754</td><td class="num">0.336</td><td class="num">0.051</td><td class="num">0.921</td></tr>
+          <tr><th scope="row">Broadcast deliberation</th><td class="num">0.644</td><td class="num">0.872</td><td class="num">0.935</td><td class="num">0.286</td><td class="num">0.708</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
+
+    <figure>
+      <img src="static/figures/fig_supp_reviewer_radar.svg" width="625" height="556" alt="Radar chart with five axes on a 0 to 1 scale, comparing PER (dashed orange) and broadcast (solid green). PER extends further on precision, 0.861 versus 0.644, and misleading resistance, 0.921 versus 0.708. Broadcast extends further on recall, 0.872 versus 0.754, CouplingRate, 0.935 versus 0.336, and reviewer-guided repair, 0.286 versus 0.051. The two shapes cross: PER is larger on the detection axes and much smaller on the coupling and repair axes.">
+      <figcaption><span class="figno">Figure&nbsp;20.</span> Five-dimensional detection&ndash;coupling&ndash;repair profile. The shape difference makes the separation concrete: the protocols diverge most sharply on the coupling and repair dimensions, not on the detection dimensions alone.</figcaption>
+    </figure>
+
+    <h3>Where the accuracy difference lives</h3>
+    <p>Collaboration is worth little on the easiest problems and a great deal on the hardest ones. Over N&nbsp;=&nbsp;4,181 the four rungs reach FinalPassRate 56.8% (baseline), 78.8% (single-agent iterative), 85.2% (PER) and 89.2% (broadcast); Pass@1 is 56.8 / 57.4 / 72.8 / 78.6%.</p>
+
+    <figure class="wide">
+      <div class="fig-scroll" tabindex="0" role="group" aria-label="Figure 2, collaboration gain by tier, scrollable figure">
+        <img src="static/figures/fig_collab_gain_by_tier.svg" width="1295" height="510" alt="Two line charts of gain in percentage points over the single-agent iterative anchor, by difficulty tier 1 to 10, for PER (orange) and broadcast (green). Panel a, FinalPassRate gain: both near zero on tiers 1 and 2, rising from tier 4 to roughly 14 to 20 points on tiers 6 to 9, with broadcast reaching about 40 points on tier 10. Panel b, Pass@1 gain: a similar rising pattern reaching roughly 27 to 35 points on tiers 7 to 10. Grey vertical bands mark the small-sample tiers 3 and 10.">
+      </div>
+      <figcaption><span class="figno">Figure&nbsp;2.</span> <strong>Tier-level collaboration gain over single-agent iterative</strong>, the matched non-collaborative anchor. Gains are near zero on tiers 1&ndash;2 and open sharply from tier 4 onward. The same pattern holds for Pass@1, before any verifier-guided retry. Grey bands mark the benchmark's small-<em>N</em> tiers (tier 3: n&nbsp;=&nbsp;20; tier 10: n&nbsp;=&nbsp;15) &mdash; do not read those two points as trends.</figcaption>
+    </figure>
+
+    <h3>Within-PER interventions: directional, not causal</h3>
+    <p>Two probes change only how critique reaches the solver, holding model family, reviewer setup and outer-loop budget fixed. Forcing the solver to acknowledge critique explicitly (<strong>ACK-required</strong>) <em>lowers</em> final accuracy, from 85.2% to 82.5%, and roughly doubles NeglectRate (0.488&nbsp;&rarr;&nbsp;0.792). Embedding reviewer guidance directly in the solver's working context (<strong>EMB</strong>) partially recovers, to 86.3%, without closing the gap to broadcast's 89.2%.</p>
+
+    <figure>
+      <img src="static/figures/fig_coupling_intervention_panel_a.png" width="946" height="895" alt="Bar chart of final outcomes for four conditions, each showing FinalPassRate in a solid bar and Pass@1 in a lighter bar. PER base 85.2% and 72.8%; PER plus ACK 82.5% and 71.0%; PER plus EMB 86.3% and 74.5%; broadcast 89.2% and 78.6%.">
+      <figcaption><span class="figno">Figure&nbsp;4(a).</span> Within-PER intervention outcomes over the full benchmark (N&nbsp;=&nbsp;4,181). ACK-required lowers FinalPassRate and Pass@1; EMB partially recovers both. <strong>Only panel (a) of the paper's Figure&nbsp;4 is shown here.</strong> Panel&nbsp;(b) of the published figure plots CouplingRate values that could not be reconstructed from the released aggregates, so it is omitted here. The verified values are Table&nbsp;14's <strong>0.200 (ACK)</strong> and <strong>0.247 (EMB)</strong>, given in the table below.</figcaption>
+    </figure>
+
+    <div class="table-scroll" tabindex="0" role="group" aria-label="Within-PER intervention suite, paper Table 14, scrollable table">
+      <table class="min-wide">
+        <caption>Within-PER intervention suite (paper Table&nbsp;14), N&nbsp;=&nbsp;4,181. Token columns from the published table are omitted &mdash; see <a href="#limitations">Limitations</a>.</caption>
+        <thead>
+          <tr><th scope="col">Condition</th><th scope="col" class="num">FinalPassRate</th><th scope="col" class="num">Pass@1</th><th scope="col" class="num">NeglectRate</th><th scope="col" class="num">Reviewer-guided repair</th><th scope="col" class="num">Useful coupling</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">PER</th><td class="num">85.2%</td><td class="num">72.8%</td><td class="num">0.488</td><td class="num">0.051</td><td class="num">0.336</td></tr>
+          <tr><th scope="row">PER + ACK-required</th><td class="num">82.5%</td><td class="num">71.0%</td><td class="num">0.792</td><td class="num">0.032</td><td class="num">0.200</td></tr>
+          <tr><th scope="row">PER + Embedded (EMB)</th><td class="num">86.3%</td><td class="num">74.5%</td><td class="num">0.698</td><td class="num">0.044</td><td class="num">0.247</td></tr>
+          <tr><th scope="row">Broadcast</th><td class="num">89.2%</td><td class="num">78.6%</td><td class="num">0.262</td><td class="num">0.286</td><td class="num">0.935</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
+
+    <div class="warning">
+      <p><strong>Read these two probes as directional, not as a clean ablation.</strong> They are a within-PER comparison, not a causal identification: the tested ACK instruction does not distinguish compliance from distraction, format effects, or reasoning perturbation, and the EMB recovery does not reproduce on the smaller frozen replication subset (N&nbsp;=&nbsp;195, where EMB is &minus;1.03&nbsp;pp against base PER). Nothing here establishes a mechanism, and nothing here is a claim about whether the solver understood the critique.</p>
+    </div>
+
+    <h3>Robustness inside the paper's own setting</h3>
+    <ul>
+      <li><strong>The coupling metric is definition-stable.</strong> Legacy and strict-deterministic CouplingRate are numerically identical for both protocols (PER 0.336 = 1,766/5,253; broadcast 0.935 = 4,876/5,214), with strict-vs-legacy disagreement of 0/5,253 and 0/5,214. An equivalence-aware variant moves PER only to 0.340. (Paper Table&nbsp;3.)</li>
+      <li><strong>The result is not a single-evaluator artifact.</strong> Replaying 16,724 saved submissions under three evaluators &mdash; <code>gpt-oss-120b</code>, <code>Meta-Llama-3.1-70B-Instruct</code>, <code>gemma-3-27b-it</code> &mdash; gives instance-level disagreement of 3.38&ndash;5.76% and Cohen's &kappa; 0.850&ndash;0.915. Re-tabulating those labels preserves the broadcast&minus;PER ordering: +2.88&nbsp;pp [1.82,&nbsp;3.91] under GPT-OSS, +3.21 [2.13,&nbsp;4.26] under Llama, +3.33 [2.22,&nbsp;4.45] under Gemma-3.</li>
+      <li><strong>But evaluator sensitivity is real where it matters most.</strong> On the hard collaborative slice (PER and broadcast, tiers 7&ndash;10, N&nbsp;=&nbsp;1,694) disagreement roughly doubles, to 9.68% / 9.39% / 5.25% with &kappa; 0.755 / 0.761 / 0.875.</li>
+      <li><strong>Run-to-run variation is smaller than the effect.</strong> On a frozen N&nbsp;=&nbsp;195 subset, independent re-executions move PER FinalPass by about 0.5&nbsp;pp and broadcast by about 2&nbsp;pp, against a paired broadcast&minus;PER gap of +4.10 to +6.67&nbsp;pp. Direction reproduced on both tested backends; one of four intervals crosses zero.</li>
+    </ul>
+
+    <figure class="wide">
+      <div class="fig-scroll" tabindex="0" role="group" aria-label="Figure 5, cross-evaluator disagreement, scrollable figure">
+        <img src="static/figures/fig_supp_eval_disagreement.svg" width="1335" height="575" alt="Panel a, grouped bar chart of pairwise evaluator disagreement rate. For each of three evaluator pairs a light bar shows the full benchmark of 16,724 instances and a dark bar the hard collaborative slice of 1,694 instances. gpt-oss versus Llama 5.8% then 9.7%; gpt-oss versus Gemma 4.3% then 9.4%; Llama versus Gemma 3.4% then 5.2%. Cohen's kappa is annotated above each bar, from 0.755 to 0.915. Panel b, heatmap of gpt-oss versus Llama disagreement by tier and protocol on the hard slice: tier 7 9.2% and 9.5%, tier 8 10.1% and 10.1%, tier 9 12.3% and 8.2%, tier 10 hatched as tiny with only 15 instances.">
+      </div>
+      <figcaption><span class="figno">Figure&nbsp;5.</span> Cross-evaluator disagreement. Overall agreement is high, but disagreement roughly doubles on the hard collaborative slice, concentrating at tiers 8&ndash;9. Tier&nbsp;10 has only 15 instances per protocol (hatched) and its lower rate should not be over-interpreted.</figcaption>
+    </figure>
+
+    <h3 id="robustness">Post-rebuttal robustness: five benchmarks, two actor families</h3>
+    <div class="scope">
+      <p><strong>Supplementary evidence, not the paper's claim.</strong> The matrix below is post-rebuttal work over five benchmarks (Omni-MATH, JEEBench, SciBench, LAB-Bench, MaScQA) and two actor families (<code>gpt-oss-120b</code>, <code>gemma-4-31b</code>). The paper itself reports Omni-MATH only. These cells use a different labelling pipeline from the main tables, so their absolute rates are <em>not</em> comparable to the 0.861&nbsp;/&nbsp;0.336&nbsp;/&nbsp;0.051 figures above; what travels is the <em>ordering</em>.</p>
+    </div>
+
+    <p>Across the ten dataset&nbsp;&times;&nbsp;actor cells:</p>
+    <ul>
+      <li>PER reviewer decision precision exceeds broadcast precision in <strong>10/10</strong> cells.</li>
+      <li>Within PER, precision exceeds verified strict next-answer repair in <strong>9/10</strong> cells. The exception is <strong>JEEBench&nbsp;&times;&nbsp;Gemma-4, where only two follow-ups are evaluable</strong> &mdash; no stable conclusion is possible from that cell.</li>
+      <li>Within broadcast, precision exceeds verified repair in <strong>10/10</strong> cells.</li>
+    </ul>
+    <p>So the separation between detecting an error and repairing it is broad across models and domains. That is the claim, and it is the only claim this matrix supports.</p>
+
+    <div class="warning">
+      <p><strong>The protocol ranking is not universal, and this page never asserts one.</strong> With Gemma-3-27b-it actors on a tier-sampled N&nbsp;=&nbsp;835 subset the outcome ranking <em>reverses</em> &mdash; PER 65.6% vs. broadcast 58.7% FinalPassRate &mdash; while the precision&ndash;uptake separation persists (precision 0.881 vs.&nbsp;0.722; uptake 0.092 vs.&nbsp;0.742; repair 0.009 vs.&nbsp;0.174). Which protocol wins is setting-dependent. What survives across settings is the separability.</p>
+    </div>
+
+    <details>
+      <summary>Per-cell numbers for the ten dataset &times; actor cells</summary>
+      <div class="table-scroll" tabindex="0" role="group" aria-label="Strict symmetric transition audit, per-cell, scrollable table">
+        <table class="min-wide">
+          <caption>Strict symmetric transition audit. Precision, strict uptake and verified strict repair by cell. Recomputed for this page from the released <code>matrix_2x5_precise_uncoupled_strict.csv</code>.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Benchmark</th><th scope="col">Actor</th>
+              <th scope="col" class="num">PER precision</th><th scope="col" class="num">BC precision</th>
+              <th scope="col" class="num">PER uptake</th><th scope="col" class="num">BC uptake</th>
+              <th scope="col" class="num">PER repair</th><th scope="col" class="num">BC repair</th>
+              <th scope="col" class="num">PER repair <em>n</em></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Omni-MATH</th><td>GPT-OSS-120B</td><td class="num">0.748</td><td class="num">0.537</td><td class="num">0.383</td><td class="num">0.295</td><td class="num">0.036</td><td class="num">0.036</td><td class="num">362</td></tr>
+            <tr><th scope="row">Omni-MATH</th><td>Gemma-4-31B</td><td class="num">0.684</td><td class="num">0.346</td><td class="num">0.254</td><td class="num">0.096</td><td class="num">0.057</td><td class="num">0.012</td><td class="num">316</td></tr>
+            <tr><th scope="row">LAB-Bench</th><td>GPT-OSS-120B</td><td class="num">0.707</td><td class="num">0.413</td><td class="num">0.286</td><td class="num">0.257</td><td class="num">0.077</td><td class="num">0.075</td><td class="num">26</td></tr>
+            <tr><th scope="row">LAB-Bench</th><td>Gemma-4-31B</td><td class="num">0.794</td><td class="num">0.576</td><td class="num">0.400</td><td class="num">0.228</td><td class="num">0.400</td><td class="num">0.049</td><td class="num">5</td></tr>
+            <tr><th scope="row">SciBench</th><td>GPT-OSS-120B</td><td class="num">0.911</td><td class="num">0.583</td><td class="num">0.636</td><td class="num">0.169</td><td class="num">0.000</td><td class="num">0.032</td><td class="num">11</td></tr>
+            <tr><th scope="row">SciBench</th><td>Gemma-4-31B</td><td class="num">0.976</td><td class="num">0.611</td><td class="num">0.650</td><td class="num">0.162</td><td class="num">0.100</td><td class="num">0.031</td><td class="num">20</td></tr>
+            <tr><th scope="row">MaScQA</th><td>GPT-OSS-120B</td><td class="num">0.750</td><td class="num">0.340</td><td class="num">0.222</td><td class="num">0.182</td><td class="num">0.111</td><td class="num">0.034</td><td class="num">9</td></tr>
+            <tr><th scope="row">MaScQA</th><td>Gemma-4-31B</td><td class="num">1.000</td><td class="num">0.438</td><td class="num">0.500</td><td class="num">0.182</td><td class="num">0.000</td><td class="num">0.091</td><td class="num">2</td></tr>
+            <tr><th scope="row">JEEBench</th><td>GPT-OSS-120B</td><td class="num">0.647</td><td class="num">0.237</td><td class="num">0.333</td><td class="num">0.143</td><td class="num">0.167</td><td class="num">0.083</td><td class="num">6</td></tr>
+            <tr><th scope="row">JEEBench</th><td>Gemma-4-31B</td><td class="num">1.000</td><td class="num">0.302</td><td class="num">1.000</td><td class="num">0.278</td><td class="num">1.000</td><td class="num">0.176</td><td class="num"><strong>2</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
+      <p style="font-size:.88rem;color:var(--muted);"><strong>Read the last column first.</strong> Eight of the ten cells rest on fewer than 30 evaluable PER follow-ups, and five rest on fewer than ten. The JEEBench&nbsp;&times;&nbsp;Gemma-4 row has <strong>n&nbsp;=&nbsp;2</strong>: its 1.000 entries are two out of two events, not a measured rate, and that cell is the one exception to the 9/10 ordering. Treat every sparse cell as exploratory. Only the two Omni-MATH rows carry enough events to stand on their own.</p>
+      <p style="font-size:.88rem;color:var(--muted);">Uptake columns are shown for completeness and are the reason a broader ordering claim is <em>not</em> made: PER strict uptake is lower than broadcast's in 0/10 cells, and PER repair is lower in 3/10. Any statement that PER has lower uptake or repair across all settings would be false here.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ==================== 6. DATA + REPRODUCIBILITY ==================== -->
+<section id="reproduce" class="tint">
+  <div class="wrap">
+    <h2><span class="num">04</span>What is released, and how to reproduce it</h2>
+    <p class="lead">The target reader is someone with no access to the authors' machines, storage, endpoints or credentials. Everything below is designed to work from the public repository and the public dataset alone.</p>
+
+    <div class="cards three">
+      <div class="card">
+        <span class="tag">Artifact 1</span>
+        <h3>Traces &amp; labels</h3>
+        <p>Per-episode symmetric review transitions, per-cell derived tables and the evaluator-replay labels, on Hugging&nbsp;Face. The pinned intermediate table ships <em>inside</em> the release so Track&nbsp;A does not depend on any private upstream.</p>
+        <p><a href="https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled">AgentsSci/NeurIPS26_Precise-but-Uncoupled</a></p>
+      </div>
+      <div class="card">
+        <span class="tag">Artifact 2</span>
+        <h3>Analysis &amp; protocol code</h3>
+        <p>The analysis pipeline that turns traces into the published tables, the protocol runtime, the exact matched configs, and the regression tests for the resource-accounting fix.</p>
+        <p><a href="https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled">ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled</a></p>
+      </div>
+      <div class="card">
+        <span class="tag">Artifact 3</span>
+        <h3>Figures &amp; tables</h3>
+        <p>The figure-regeneration script and the aggregate CSVs it reads, so every published figure can be rebuilt from the released tables without re-running inference.</p>
+        <p>Shipped in the repository under <code>figures/</code> and <code>report/</code>.</p>
+      </div>
+    </div>
+
+    <h3>Two tracks, and which one answers your question</h3>
+    <div class="table-scroll" tabindex="0" role="group" aria-label="What each reproduction track requires and guarantees, scrollable table">
+      <table class="min-wide">
+        <caption>What each reproduction track requires and guarantees.</caption>
+        <thead>
+          <tr><th scope="col">&nbsp;</th><th scope="col">Track&nbsp;A &mdash; offline artifact reproduction</th><th scope="col">Track&nbsp;B &mdash; live protocol re-execution</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Needs a model endpoint?</th>
+            <td><strong>No.</strong> Zero model calls.</td>
+            <td><strong>Yes</strong> &mdash; your own OpenAI-compatible endpoint, supplied as <code>base_url</code> + <code>api_key</code> from the environment.</td>
+          </tr>
+          <tr>
+            <th scope="row">Entry point</th>
+            <td><code>make reproduce-analysis</code></td>
+            <td><code>make smoke-live</code> for a few problems; full-scale instructions in the repository.</td>
+          </tr>
+          <tr>
+            <th scope="row">What it regenerates</th>
+            <td>The central result tables, the process metrics, the evaluator-replay summaries, the uncertainty estimates, the post-rebuttal robustness matrix, and the publication and website figures.</td>
+            <td>Fresh trajectories under any of the four protocols, from which the same analysis can then be run.</td>
+          </tr>
+          <tr>
+            <th scope="row">Determinism</th>
+            <td><strong>Deterministic and checksum-verifiable.</strong> Outputs match exactly, or within documented numerical tolerances.</td>
+            <td><strong>Expected to vary.</strong> There is no seed: the hosted endpoint runtime is not frozen and exposes none, so every run is an independent execution.</td>
+          </tr>
+          <tr>
+            <th scope="row">Cost and time</th>
+            <td>About a minute on a normal laptop for the core pipeline. No GPU, no HPC allocation.</td>
+            <td>Depends on your endpoint. The smoke target is deliberately tiny. ALCF and PBS are <em>not</em> required &mdash; nothing in the release hardcodes a private endpoint.</td>
+          </tr>
+          <tr>
+            <th scope="row">If your numbers differ</th>
+            <td>That is a bug &mdash; please open an issue. The released checksums pin the inputs.</td>
+            <td>Expect PER FinalPass to move about &plusmn;0.5&nbsp;pp and broadcast about &plusmn;2&nbsp;pp between independent executions (measured on a frozen N&nbsp;=&nbsp;195 subset). The broadcast&nbsp;&gt;&nbsp;PER direction reproduced on both tested backends, but one of four intervals crossed zero.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
+
+    <h3>Get started</h3>
+    <div class="copywrap">
+      <button class="copybtn" type="button" data-copy="#cmd-a">Copy</button>
+      <pre id="cmd-a" tabindex="0" role="group" aria-label="Track A commands, scrollable code block"><code><span class="c"># 1. get the code</span>
+git clone https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled.git
+cd NeurIPS26_Precise-but-Uncoupled
+
+<span class="c"># 2. get the data (no credentials needed once the dataset is public)</span>
+make fetch-data
+
+<span class="c"># 3. Track A — verify checksums, then rebuild every table and figure.</span>
+<span class="c">#    No model calls. No endpoint. No GPU.</span>
+make verify-checksums
+make reproduce-analysis</code></pre>
+    </div>
+
+    <div class="copywrap">
+      <button class="copybtn" type="button" data-copy="#cmd-b">Copy</button>
+      <pre id="cmd-b" tabindex="0" role="group" aria-label="Track B commands, scrollable code block"><code><span class="c"># Track B — re-run a protocol against YOUR OWN model service.</span>
+<span class="c"># Any OpenAI-compatible endpoint works; nothing private is baked in.</span>
+export OPENAI_BASE_URL="https://your-endpoint.example/v1"
+export OPENAI_API_KEY="your-key"
+
+make smoke-live          <span class="c"># a handful of problems, minutes not hours</span></code></pre>
+    </div>
+    <p style="font-size:.88rem;color:var(--muted);">The public model identifiers used in the paper are <code>openai/gpt-oss-120b</code> (all acting roles and the evaluator) and, for the appendix cross-family replication, <code>gemma-3-27b-it</code> with the evaluator still fixed to <code>gpt-oss-120b</code>. Decoding was temperature&nbsp;0 throughout. The repository's README carries the authoritative, versioned form of these commands; if this page and the README disagree, the README is correct.</p>
+
+    <div class="note">
+      <p><strong>An honest note about cross-linking.</strong> arXiv&nbsp;v1's comments field currently advertises a different page &mdash; the authors' <a href="https://huggingface.co/spaces/AgentsSci/scientific-agent-protocol-traces-site">AgentsSci resource site</a> &mdash; and contains no link to this page or to the repository. Until an arXiv&nbsp;v2 is submitted, <strong>the paper of record does not link here</strong>. The v1 text says only that "code and data will be released after institutional approval"; this release is what fulfils that statement.</p>
+    </div>
+
+    <h3 id="licensing">Licensing and data use &mdash; read before you download</h3>
+    <div class="warning">
+      <p><strong>The released dataset spans five benchmarks and inherits their terms. Two of them restrict what you may do.</strong></p>
+      <ul style="margin-bottom:0;">
+        <li><strong>MaScQA is CC&nbsp;BY-NC-SA&nbsp;4.0 &mdash; NonCommercial. Commercial use is not allowed.</strong></li>
+        <li><strong>LAB-Bench is CC&nbsp;BY-SA&nbsp;4.0 &mdash; ShareAlike, and carries an upstream do-not-train request.</strong> The LAB-Bench contamination canary is preserved verbatim in the release; do not strip it, and please honour the upstream request not to train on that material.</li>
+      </ul>
+    </div>
+    <p>Because the release combines these sources, the combined artifact inherits both the NonCommercial and the ShareAlike conditions. It is published under a composite licence rather than a single permissive one, with a machine-readable per-source table so you can filter to the subset whose terms suit your use.</p>
+    <div class="table-scroll" tabindex="0" role="group" aria-label="Per-source terms carried through the release, scrollable table">
+      <table>
+        <caption>Per-source terms carried through the release.</caption>
+        <thead><tr><th scope="col">Source benchmark</th><th scope="col">Licence</th><th scope="col">Practical effect</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Omni-MATH&nbsp;2</th><td>Apache-2.0</td><td>Permissive; commercial use allowed under upstream terms.</td></tr>
+          <tr><th scope="row">JEEBench</th><td>MIT</td><td>Permissive; commercial use allowed under upstream terms.</td></tr>
+          <tr><th scope="row">SciBench</th><td>MIT</td><td>Permissive; commercial use allowed under upstream terms.</td></tr>
+          <tr><th scope="row">LAB-Bench</th><td><a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></td><td>ShareAlike: derivatives must carry the same licence. Upstream asks that it not be trained on. Canary preserved.</td></tr>
+          <tr><th scope="row">MaScQA</th><td><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></td><td><strong>NonCommercial &mdash; commercial use not allowed.</strong> ShareAlike also applies.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The models used are third-party public checkpoints under their own terms &mdash; <a href="https://huggingface.co/openai/gpt-oss-120b"><code>openai/gpt-oss-120b</code></a> is Apache-2.0. The paper itself is on arXiv under the <a href="https://arxiv.org/licenses/nonexclusive-distrib/1.0/">arXiv.org perpetual non-exclusive license&nbsp;1.0</a>, which is not a Creative Commons licence.</p>
+  </div>
+</section>
+
+<!-- ==================== 7. TRACE EXAMPLE ==================== -->
+<section id="example">
+  <div class="wrap">
+    <h2><span class="num">05</span>What an uncoupled episode looks like</h2>
+    <p class="lead">The three-step decomposition is not an abstraction over the data &mdash; it is read off individual answer transitions. Below are real transitions from the released table, all drawn from <strong>Omni-MATH (Apache-2.0)</strong> so that nothing here is encumbered by the NonCommercial or ShareAlike terms above.</p>
+
+    <p>Each row is one review episode where the reviewer asked for a revision and the candidate in hand was in fact wrong &mdash; a true-positive detection. All six are drawn from the <strong>strict pre-gate population</strong> defined below, so every "after" answer is the actor's own immediate response to the critique rather than a system-selected candidate. What varies is what happened next.</p>
+
+    <div class="table-scroll" tabindex="0" role="group" aria-label="Answer transitions on verified-useful review episodes, scrollable table">
+      <table class="min-wide">
+        <caption>Answer transitions on verified-useful review episodes, Omni-MATH&nbsp;&times;&nbsp;<code>gpt-oss-120b</code>. Answers are shown as stored, in LaTeX.</caption>
+        <thead>
+          <tr><th scope="col">Protocol</th><th scope="col">Answer before review</th><th scope="col">Answer after review</th><th scope="col">Outcome</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">PER</th><td><code>\frac{7}{16}</code></td><td><code>\frac{7}{16}</code></td><td><strong style="color:var(--warm)">Neglected</strong><span class="sub">flagged answer was in fact wrong; the candidate did not move</span></td></tr>
+          <tr><th scope="row">PER</th><td><code>72</code></td><td><code>72</code></td><td><strong style="color:var(--warm)">Neglected</strong><span class="sub">same answer carried forward</span></td></tr>
+          <tr><th scope="row">PER</th><td><code>72</code></td><td><code>8+16\sqrt{2}</code></td><td>Changed, still wrong<span class="sub">uptake happened; repair did not</span></td></tr>
+          <tr><th scope="row">PER</th><td><code>96</code></td><td><code>192</code></td><td><strong style="color:var(--accent)">Repaired</strong><span class="sub">changed and now correct</span></td></tr>
+          <tr><th scope="row">Broadcast</th><td><code>8 + 4\sqrt{2}</code></td><td><code>8 + 4\sqrt{2}</code></td><td><strong style="color:var(--warm)">Neglected</strong><span class="sub">happens under broadcast too, just less often</span></td></tr>
+          <tr><th scope="row">Broadcast</th><td><code>132</code></td><td><code>252</code></td><td><strong style="color:var(--accent)">Repaired</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
+
+    <p>Counting these transitions requires care, because the two protocols are not eligible on the same terms. Over the whole benchmark there are <strong>1,992</strong> such useful-review episodes under PER and <strong>1,742</strong> under broadcast. Only a subset of each has an answer pair that parses on both sides <em>and</em> records the actor's own immediate response rather than a system-selected candidate: the <strong>strict pre-gate population</strong>, <strong>n&nbsp;=&nbsp;379 for PER</strong> and <strong>n&nbsp;=&nbsp;533 for broadcast</strong>. On that population, and on that population for both protocols:</p>
+    <div class="table-scroll" tabindex="0" role="group" aria-label="Strict pre-gate transition counts by protocol, scrollable table">
+      <table>
+        <caption>Strict pre-gate transitions on useful-review episodes, Omni-MATH&nbsp;&times;&nbsp;<code>gpt-oss-120b</code>. Both columns use the same population definition.</caption>
+        <thead><tr><th scope="col">&nbsp;</th><th scope="col" class="num">PER</th><th scope="col" class="num">Broadcast</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Useful-review episodes</th><td class="num">1,992</td><td class="num">1,742</td></tr>
+          <tr><th scope="row">Strict pre-gate population <em>n</em></th><td class="num">379</td><td class="num">533</td></tr>
+          <tr><th scope="row">Answer unchanged</th><td class="num">234</td><td class="num">376</td></tr>
+          <tr><th scope="row">Changed, still wrong</th><td class="num">115</td><td class="num">53</td></tr>
+          <tr><th scope="row">Repaired</th><td class="num">13</td><td class="num">16</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
+    <p>The remaining changed rows in each column are transitions the evaluator did not label on both sides, so they support no repair verdict either way.</p>
+    <div class="scope">
+      <p><strong>Why the strict population, and not simply everything that parses.</strong> Under broadcast, a further <strong>445</strong> parseable episodes are excluded because a system-selected candidate update intervened before the actor responded &mdash; the answer moved, but not as an immediate reply to the critique. Counting those would attribute the approval gate's own bookkeeping to critique uptake, which is precisely the confound the strict definition exists to remove; it would raise broadcast's apparent repair count from 16 to 67 without a single additional actor response. <strong>PER has no such rows</strong> &mdash; the strict filter removes nothing from it &mdash; so including them would compare the two protocols over different populations. This is also why no causal claim about the approval gate appears on this page: the gate changes what is even measurable, as noted in <a href="#limitations">Limitations</a>.</p>
+    </div>
+
+    <div class="warning">
+      <p><strong>What these rows are and are not.</strong> They are answer-string transitions with an evaluator verdict attached. The label "Neglected" means <em>the answer did not change</em>, not that the solver read the critique and disregarded it, and not that the critique was well written. This release contains no semantic labelling of critique text, so no claim of that kind is made anywhere. Note also that most episodes never reach the strict population at all &mdash; usually because one side of the answer pair could not be parsed &mdash; so the counts above are over that restricted remainder, not over all 1,992 and 1,742 episodes. The released table carries an explicit exclusion reason for every row, which is what makes the two populations auditable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 8. LIMITATIONS ==================== -->
+<section id="limitations" class="tint">
+  <div class="wrap">
+    <h2><span class="num">06</span>Limitations</h2>
+    <p class="lead">Four limits shape what can and cannot be concluded. The first three bound the science; the fourth is a defect in the published artifact that this release corrects.</p>
+
+    <h3>1. Benchmark and model scope</h3>
+    <p>The paper's result is measured on one benchmark &mdash; Omni-MATH&nbsp;2 filtered, N&nbsp;=&nbsp;4,181 &mdash; with one actor family, <code>gpt-oss-120b</code>, serving every role including the evaluator. The appendix adds a Gemma-3 cross-family replication on a tier-sampled N&nbsp;=&nbsp;835, and the post-rebuttal matrix adds four further benchmarks with Gemma-4 actors. That is two model generations and five benchmarks in total. <strong>Nothing here generalises to model families that were not tested.</strong> Two tiers of the main benchmark, tier&nbsp;3 (n&nbsp;=&nbsp;20) and tier&nbsp;10 (n&nbsp;=&nbsp;15), are too small to support tier-level conclusions, and several post-rebuttal cells have fewer than ten evaluable follow-ups.</p>
+    <p>Relatedly: <strong>which protocol wins is setting-dependent.</strong> Gemma-3 actors reverse the accuracy ranking. This page makes no universal claim that one protocol beats the other.</p>
+
+    <h3>2. No causal isolation of the approval gate</h3>
+    <p>The natural mechanistic story &mdash; "collective re-approval forces uptake" &mdash; is <strong>not</strong> established here, and cannot be with the available controls. Turning the approval gate off changes six of seven required invariants at once, so the toggle cannot isolate the gate's effect. PER and broadcast are complete protocol designs differing jointly in routing, shared state, feedback delivery, prompts and round structure; the comparison is configuration-level and descriptive. The ACK and EMB probes are directional within-PER evidence, not a clean ablation. The isolated causal effect of any single mechanism remains an open question.</p>
+
+    <h3>3. Operational metrics, not semantic ones</h3>
+    <p>CouplingRate and the repair rates are answer-transition statistics grounded in the evaluator's verdict. They say nothing about whether critique text was correct in its reasoning, whether the solver understood it, or whether a neglect was reasonable. A blinded taxonomy of <em>why</em> critique was neglected would require per-problem intervention traces that were not retained, so it is not possible from this release. Separately, the evaluator is an LLM: on the hardest collaborative slice, independent evaluators disagree on about 5&ndash;10% of instances, which is exactly where answer equivalence is most ambiguous.</p>
+
+    <h3>4. The legacy cost accounting in arXiv&nbsp;v1 is invalid &mdash; and is withdrawn here</h3>
+    <div class="warning">
+      <p><strong>Do not use the token, model-call, or cost numbers printed in arXiv&nbsp;v1.</strong> The harness reused one solver object per worker and the token counters were never reset between problems, so the recorded per-problem token and model-call figures are cumulative within a worker rather than per problem. The defect was confirmed independently at both the code and the data level: the exported counters show a sawtooth reset pattern, and averaging the cumulative snapshots reproduces the published means exactly.</p>
+      <p style="margin-bottom:0;"><strong>Exact recovery is not possible</strong> &mdash; no worker-boundary metadata survived the export and no lower-level request logs were retained. Everything downstream of those fields is therefore withdrawn: the token columns of the main and intervention tables, the cost-per-solve figures, the cost-performance frontier, the verifier-cost break-even thresholds, and the per-tier deployment guidance. <strong>Those figures and tables are deliberately not shown on this page.</strong></p>
+    </div>
+    <p>What survives, and is used here:</p>
+    <ul>
+      <li><strong>Every accuracy result.</strong> FinalPassRate, Pass@1, the tier structure, the three-evaluator replay and all the review-transition labels are unaffected &mdash; they never depended on the token counters.</li>
+      <li><strong>Wall-clock time</strong>, retained per trajectory in the released data. Useful as a realized-latency measure, but it is not a compute-matched comparison.</li>
+    </ul>
+    <p><strong>Evaluator call accounting is under review and is not published here.</strong> Those counts come from a different counter than the token fields, but an unresolved discrepancy in how they were recorded means they are withheld pending re-derivation rather than presented as cleared. No per-problem evaluator or model call figure appears anywhere on this page.</p>
+    <p>A compute-matched PER&ndash;broadcast comparison is <strong>infeasible in this harness</strong>: there is no aggregate generation-token ceiling to match on. In particular, the deeper-reflection PER variant is an accuracy stress test only and must not be described as token-matched. The released code carries the counter-reset fix and three regression tests, so runs made with the current harness do not have this defect &mdash; but the published legacy values cannot be repaired retroactively.</p>
+  </div>
+</section>
+
+<!-- ==================== 9. CITATION ==================== -->
+<section id="citation">
+  <div class="wrap">
+    <h2><span class="num">07</span>Citation</h2>
+    <p class="lead">Please cite the arXiv preprint.</p>
+    <div class="copywrap">
+      <button class="copybtn" type="button" data-copy="#bibtex">Copy BibTeX</button>
+      <pre id="bibtex" tabindex="0" role="group" aria-label="BibTeX citation, scrollable code block"><code>@misc{yang2026preciseuncoupled,
+  title         = {Precise but Uncoupled: Reviewer Precision Does Not Guarantee
+                   Critique Uptake in Multi-Agent Math Reasoning},
+  author        = {Yang, Chih-Hsuan and Jiang, Jingyan and Vasudevan, Vikram and
+                   Yang, Cheng-Hau and Zheng, Huihuo and Chen, Le and
+                   Huerta, Eliu A. and Vishwanath, Venkatram and
+                   Foster, Ian T. and Thakur, Rajeev},
+  year          = {2026},
+  eprint        = {2607.15388},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  doi           = {10.48550/arXiv.2607.15388},
+  url           = {https://arxiv.org/abs/2607.15388}
+}</code></pre>
+    </div>
+    <dl class="meta-grid">
+      <dt>arXiv</dt><dd><a href="https://arxiv.org/abs/2607.15388">arXiv:2607.15388</a> [cs.AI], v1, submitted 16&nbsp;July&nbsp;2026</dd>
+      <dt>DOI</dt><dd><a href="https://doi.org/10.48550/arXiv.2607.15388">10.48550/arXiv.2607.15388</a></dd>
+      <dt>Status</dt><dd>Preprint. Submitted to NeurIPS&nbsp;2026. No decision is claimed or implied.</dd>
+      <dt>Contact</dt><dd><a href="mailto:bellayang@anl.gov">bellayang@anl.gov</a> (corresponding author)</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- ==================== 10. TEAM + ACKNOWLEDGMENTS ==================== -->
+<section id="team" class="tint">
+  <div class="wrap">
+    <h2><span class="num">08</span>Team and acknowledgments</h2>
+
+    <h3>Authors</h3>
+    <div class="table-scroll" tabindex="0" role="group" aria-label="Author list in publication order, scrollable table">
+      <table>
+        <caption>Author list in publication order.</caption>
+        <thead><tr><th scope="col" class="num">#</th><th scope="col">Author</th><th scope="col">Affiliation</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><th scope="row"><a href="mailto:bellayang@anl.gov">Chih-Hsuan Yang</a></th><td>Argonne National Laboratory &mdash; <em>corresponding author</em></td></tr>
+          <tr><td class="num">2</td><th scope="row">Jingyan Jiang</th><td>Argonne National Laboratory</td></tr>
+          <tr><td class="num">3</td><th scope="row">Vikram Vasudevan</th><td>Oregon State University</td></tr>
+          <tr><td class="num">4</td><th scope="row">Cheng-Hau Yang</th><td>Argonne National Laboratory</td></tr>
+          <tr><td class="num">5</td><th scope="row">Huihuo Zheng</th><td>Argonne National Laboratory</td></tr>
+          <tr><td class="num">6</td><th scope="row">Le Chen</th><td>Argonne National Laboratory</td></tr>
+          <tr><td class="num">7</td><th scope="row">Eliu A. Huerta</th><td>Argonne National Laboratory; University of Chicago</td></tr>
+          <tr><td class="num">8</td><th scope="row">Venkatram Vishwanath</th><td>Argonne National Laboratory</td></tr>
+          <tr><td class="num">9</td><th scope="row">Ian T. Foster</th><td>Argonne National Laboratory; University of Chicago</td></tr>
+          <tr><td class="num">10</td><th scope="row">Rajeev Thakur</th><td>Argonne National Laboratory</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Acknowledgments</h3>
+    <p>This research used resources of the Argonne Leadership Computing Facility, a U.S. Department of Energy (DOE) Office of Science user facility at Argonne National Laboratory (ANL) operated under Contract No.&nbsp;DE-AC02-06CH11357. The work was also supported under the same contract by the DOE Office of Science's Advanced Scientific Computing Research Program and by Laboratory Directed Research and Development (LDRD) funding from ANL, provided by the Director, DOE Office of Science.</p>
+
+    <h3>Related work from this group</h3>
+    <p>This paper is one of several studies built on the same matched multi-protocol design. The group's resource site, <a href="https://huggingface.co/spaces/AgentsSci/scientific-agent-protocol-traces-site">AgentsSci &mdash; Measuring Multi-Agent Scientific Reasoning</a>, collects the protocol definitions and the broader trace resources they share.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning.</strong> Preprint, arXiv:2607.15388 [cs.AI], v1, 16&nbsp;July&nbsp;2026. Submitted to NeurIPS&nbsp;2026; no decision is claimed.</p>
+    <p>Figures on this page are reproductions of figures from the preprint. The released dataset inherits <strong>NonCommercial</strong> terms from MaScQA (CC&nbsp;BY-NC-SA&nbsp;4.0) and <strong>ShareAlike</strong> plus a do-not-train request from LAB-Bench (CC&nbsp;BY-SA&nbsp;4.0) &mdash; see <a href="#licensing">Licensing and data use</a> before downloading. Model checkpoints are third-party public releases under their own licences.</p>
+    <p>This page is hand-written static HTML. It loads no fonts, scripts, trackers or assets from any third party, and sets no cookies.</p>
+    <nav class="quicknav" aria-label="Page sections">
+      <a href="#abstract">Abstract</a>
+      <a href="#motivation">Motivation</a>
+      <a href="#method">Method</a>
+      <a href="#findings">Findings</a>
+      <a href="#reproduce">Reproduce</a>
+      <a href="#licensing">Licensing</a>
+      <a href="#example">Example</a>
+      <a href="#limitations">Limitations</a>
+      <a href="#citation">Cite</a>
+      <a href="#team">Team</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var btns = document.querySelectorAll(".copybtn");
+  function flash(btn, state, label) {
+    var original = btn.getAttribute("data-label") || btn.textContent;
+    btn.setAttribute("data-label", original);
+    btn.setAttribute("data-state", state);
+    btn.textContent = label;
+    window.setTimeout(function () {
+      btn.removeAttribute("data-state");
+      btn.textContent = original;
+    }, 2000);
+  }
+  function legacyCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.top = "-1000px";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  for (var i = 0; i < btns.length; i++) {
+    (function (btn) {
+      var target = document.querySelector(btn.getAttribute("data-copy"));
+      if (!target) { btn.hidden = true; return; }
+      btn.addEventListener("click", function () {
+        var text = target.innerText.replace(/ /g, " ");
+        function fallback() {
+          var ok = legacyCopy(text);
+          flash(btn, ok ? "ok" : "err", ok ? "Copied" : "Select manually");
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(
+            function () { flash(btn, "ok", "Copied"); },
+            fallback
+          );
+        } else {
+          fallback();
+        }
+      });
+    })(btns[i]);
+  }
+})();
+</script>
+</body>
+</html>
