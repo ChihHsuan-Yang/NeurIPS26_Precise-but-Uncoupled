@@ -19,6 +19,9 @@ DOI [10.48550/arXiv.2607.15388](https://doi.org/10.48550/arXiv.2607.15388).
 | Code (this repo) | https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled |
 | Data | https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled |
 
+All live links, pinned revisions and content digests are collected in
+[`docs/RELEASE_ARTIFACTS.md`](docs/RELEASE_ARTIFACTS.md).
+
 ---
 
 ## The question

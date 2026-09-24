@@ -60,7 +60,8 @@ OUT OF SCOPE / NEVER CLAIMED:
   semantic correctness of critique text; ALL legacy absolute token/call values; generalization
   beyond tested model families; any project-trained model; any NeurIPS acceptance.
 RETIRED and absent from every surface except as a labelled retraction with its refutation:
-  "PER has lower strict uptake in all settings" — measured 0/10 uptake, 3/10 repair. It was
+  the retired uptake-ordering claim (that PER takes up critique less often in EVERY setting)
+  — measured 0/10 for uptake and 3/10 for repair. It was
   never in the submitted paper or arXiv v1, so no correction of record is owed.
 SCOPE DISCIPLINE: the paper is Omni-MATH-only (N=4,181, temperature 0, actor and evaluator both
   openai/gpt-oss-120b). The five-dataset x two-actor matrix is post-rebuttal ROBUSTNESS evidence
@@ -70,7 +71,7 @@ COST: wall_time_seconds valid for all 53,224 matched trajectories; token/call NU
   with the audit disagreement documented rather than silently resolved.
 
 ## Original Source Preservation
-AgentVerse /Users/bellayang/Documents/2026/multi_agents_trace/AgentVerse
+AgentVerse (author-local working tree, path withheld)
   branch codex/dhd-protocol  (before == after)
   HEAD   b4a2db6ee53811b1a578972421da6a9cc2a18286  (before == after)
   porcelain 53 (before == after);  stash 1 entry (before == after)
@@ -79,7 +80,7 @@ AgentVerse /Users/bellayang/Documents/2026/multi_agents_trace/AgentVerse
   (18:48:59) because a sub-agent ran pytest with AgentVerse as CWD. That directory PRE-EXISTED
   (created 2026-07-17) and is gitignored (.gitignore:55), so git state is byte-identical to
   baseline. The claim "zero bytes were written under AgentVerse" would be FALSE and is not made.
-note repo /Users/bellayang/Documents/note
+note repo (author-local notes repository, path withheld)
   Files modified under Neurips-Coupling / the two Overleaf clones: 0.
   HEAD moved e759fe79 -> 882ec0f3 during the session. NOT OURS: git log over that range shows
   every changed path under ICLR-Receiver_Conditional_Communication_Policies, ZERO under

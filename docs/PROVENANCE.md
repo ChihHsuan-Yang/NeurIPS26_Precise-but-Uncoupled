@@ -206,3 +206,44 @@ are **not** hostnames. Resolvable endpoint URLs, IPs, ports, usernames, absolute
 paths and tokens remain forbidden and are absent. The author e-mail
 `bellayang@anl.gov` is retained: it is the corresponding-author address already
 published on arXiv.
+
+## Contact details and third-party addresses (audit, 2026-09-23)
+
+A full sweep of every tracked file was run for e-mail-shaped strings.
+
+**In code, scripts, configs, notebooks and the Makefile: zero.** No example
+snippet, execution script, or usage instruction contains a personal address,
+an internal path, or a credential. Verified over all tracked `*.py`, `*.sh`,
+`*.yaml`, `*.yml`, `*.json`, `*.ipynb` and `Makefile` files.
+
+**`bellayang@anl.gov` appears 7 times, all deliberate citation or contact
+metadata**, never in runnable code:
+
+| File | Role |
+|---|---|
+| `CITATION.cff` | author e-mail, required by the CFF schema for the corresponding author |
+| `pyproject.toml` | package author metadata |
+| `README.md` | corresponding-author line under the author list |
+| `SECURITY.md` (x2) | where to report a vulnerability, plus the note explaining why it is retained |
+| `CODE_OF_CONDUCT.md` | where to report a conduct concern |
+| `docs/PROVENANCE.md` | this record |
+
+These are kept intentionally. The address is already published on arXiv v1 and
+on the paper's title page; a project with no reachable maintainer cannot receive
+a security report or a correction. Replacing them with a placeholder would make
+`SECURITY.md` and `CODE_OF_CONDUCT.md` non-functional and would break the CFF
+citation record. The distinction that matters for this release is between a
+*published contact address* (kept) and a *filesystem path containing a
+username* (removed everywhere -- `validate_release.py` enforces zero hits for
+the four absolute-path prefixes it defines, covering macOS home directories,
+Linux home directories, and the two ALCF filesystem roots).
+
+**Two third-party addresses appear in `data/omni-math-2-filtered/all.jsonl`**
+(`vladimir.shelomovskii@gmail.com`, `orders@tomasdiaz.com`), in the
+`equation_solution` field of exactly 2 of the 4,181 records. These are
+Art-of-Problem-Solving contributor attributions carried verbatim in the
+upstream Omni-MATH-2 benchmark text. They are **not ours to edit**: the file is
+redistributed benchmark content under Apache-2.0, its digest is pinned in the
+release manifest, and altering the solution text would corrupt the benchmark
+and break checksum-verified reproduction. They are reported here rather than
+silently modified.

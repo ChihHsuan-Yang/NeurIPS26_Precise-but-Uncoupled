@@ -42,7 +42,8 @@ These are not cosmetic. v1 prints numbers that the rebuttal audit withdrew.
     and exact recovery is impossible. Affected: Table 1 token columns, Table 5 (PER-inner6
     tokens), Table 14 AvgTokens, Tables 20/21 (verifier-cost thresholds), Figures 14/15/16.
     Withdraw the absolute values and the token-caliper sensitivity; keep wall-clock, which is valid.
- b. Do not introduce the claim "PER has lower strict uptake in all settings." It is NOT in v1
+ b. Do not introduce the retired uptake-ordering claim (that PER takes up critique less often
+    in EVERY setting). It is NOT in v1
     (verified by grep) and the symmetric audit measures 0/10 for uptake and 3/10 for repair.
     If you describe the 2x5 audit, the supported wording is: reviewer detection quality and
     successful repair separate broadly across models and domains.
