@@ -56,3 +56,55 @@ Reviews were 4/4/4 with the AC leaning accept. No decision may be asserted anywh
 
 ## 6. After you submit v2
 Re-run the cross-link check; only then is the matrix complete on all four surfaces.
+
+---
+
+## Why this is now the ONLY remaining gap in the link graph (status 2026-09-24)
+
+Every other surface has been fixed. The current outbound-link matrix:
+
+| From | arXiv | GitHub | Website | HF dataset | HF Space |
+|---|---|---|---|---|---|
+| arXiv        | — | **MISSING** | **MISSING** | **MISSING** | yes |
+| GitHub       | yes | — | yes | yes | yes (in RELEASE_ARTIFACTS.md) |
+| Website      | yes | yes | — | yes | yes |
+| HF dataset   | yes | yes | yes | — | — |
+
+The three new surfaces form a complete triangle. arXiv is the one node with no
+route into them: its Comments field points only at the HF Space, which is a
+broader multi-paper resource and does not link onward to this paper's website,
+repository, or dataset. Scholar authority arriving at the paper therefore
+dead-ends.
+
+Also fixed on 2026-09-24, so you do not need to redo them:
+* GitHub About: description, homepage and 12 topics were empty; every share
+  rendered GitHub's "Contribute to ... by creating an account" fallback. Set.
+* Sitemap: the project site was absent from the root `sitemap.xml`. Added.
+* Inbound links: `/publications/` and `/projects/` linked only to arXiv. They
+  now carry Project / Code / Data links, matching the pattern the BioTrove
+  entry already used.
+* Website: JSON-LD `ScholarlyArticle` (10 authors, DOI, codeRepository,
+  associatedMedia), dark mode, and a 2x raster for the one non-vector figure.
+
+Two items are deliberately left for you because they are your decisions, not
+mechanical fixes:
+
+1. **The stale HF Space.** `AgentsSci/scientific-agent-protocol-traces-site` is
+   what arXiv v1 advertises and it contains no link to any of the three new
+   surfaces. Either add links there, or point arXiv v2 at the new website, or
+   both. Pointing v2 at the website is the cleaner fix; updating the Space also
+   helps the ten weeks of existing authority.
+2. **`extra_gated_prompt` vs `gated: false`.** The dataset card carries gate
+   text describing the LAB-Bench do-not-train request and MaScQA NonCommercial
+   terms, but the API reports `gated: false` and files download unauthenticated
+   (verified: anonymous parquet fetch returns HTTP 200). It is display text, not
+   an access control. If you want the terms merely *stated*, this is fine and
+   the card already states them prominently elsewhere; if you want them
+   *acknowledged before download*, enable gating in the dataset settings. Do
+   not leave it ambiguous in a way that implies a gate exists.
+
+Not measurable from here: web-index status. Every automated route to
+Google/Bing/DDG hit a bot wall, and a positive control on a known-indexed page
+also returned zero, so the instrument cannot distinguish "not indexed" from
+"not measured". Check Search Console yourself. The surfaces are hours old, so
+absence from an index is expected rather than a defect.
