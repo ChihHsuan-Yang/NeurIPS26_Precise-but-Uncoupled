@@ -2,8 +2,9 @@
 
 ### Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning
 
-**NeurIPS 2026 submission · Preprint**
+**Accepted to NeurIPS 2026 — Main Track**
 
+[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS%202026-Main%20Track%20Accepted-2E7D32)](https://neurips.cc/)
 [![Project page](https://img.shields.io/badge/Project-Page-1f6f8b)](https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/)
 [![arXiv](https://img.shields.io/badge/arXiv-2607.15388-b31b1b)](https://arxiv.org/abs/2607.15388)
 [![PDF](https://img.shields.io/badge/Paper-PDF-333333)](https://arxiv.org/pdf/2607.15388)
@@ -44,7 +45,7 @@ No need to scroll. Every artifact is one click from this table.
 
 | Resource | What it is | Get it |
 |---|---|---|
-| **Paper** | Preprint, 48 pp, 20 figures, 25 tables | [![arXiv](https://img.shields.io/badge/arXiv-abs-b31b1b)](https://arxiv.org/abs/2607.15388) [![PDF](https://img.shields.io/badge/-PDF-333333)](https://arxiv.org/pdf/2607.15388) |
+| **Paper** | NeurIPS 2026 Main Track · 48 pp, 20 figures, 25 tables | [![arXiv](https://img.shields.io/badge/arXiv-abs-b31b1b)](https://arxiv.org/abs/2607.15388) [![PDF](https://img.shields.io/badge/-PDF-333333)](https://arxiv.org/pdf/2607.15388) |
 | **Project website** | Story, figures, results, citation | [![Page](https://img.shields.io/badge/Project-Page-1f6f8b)](https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/) |
 | **Dataset** | 53,224 trajectories · 95,799 review transitions · 325 MB | [![HF](https://img.shields.io/badge/%F0%9F%A4%97-Dataset%20card-ffcc4d)](https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled) [![Viewer](https://img.shields.io/badge/-Browse-4c9aff)](https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled/viewer) |
 | **Headline table input** | Pinned 65.6 MB transitions CSV, Track A input | [![Download](https://img.shields.io/badge/-Download-2E7D32)](https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled/resolve/main/derived/full_release_symmetric_transitions.csv) |
@@ -118,6 +119,33 @@ export OPENAI_API_KEY="your-key"
 make smoke-live
 ```
 
+## Load the dataset
+
+```python
+from datasets import load_dataset
+
+repo = "AgentsSci/NeurIPS26_Precise-but-Uncoupled"
+outcomes  = load_dataset(repo, "outcomes",         split="train")
+coupling  = load_dataset(repo, "coupling_metrics", split="train")
+problems  = load_dataset(repo, "problems",         split="train")
+
+# the paper's own setting
+omni = outcomes.filter(lambda r: r["benchmark_id"] == "omnimath2")
+print(len(omni), omni.column_names)
+```
+
+Six viewer-ready configs: `outcomes`, `coupling_metrics`, `problems`,
+`aggregate_metrics`, `evaluator_replay`, `trace_index`. No token needed — the
+dataset is public. Whole-repo download:
+
+```bash
+hf download AgentsSci/NeurIPS26_Precise-but-Uncoupled --repo-type dataset --local-dir ./data
+```
+
+> **`before_correct` and `after_correct` are tri-state** (True / False / null).
+> Null means the frozen evaluator never labelled that side — **not** "incorrect".
+> Filter on explicit values; never coerce null to False.
+
 ## Which numbers are invalid — read before quoting any cost figure
 
 Legacy per-problem token and model-call values were **cumulative within
@@ -166,6 +194,7 @@ upstream do-not-train request. See [`NOTICE`](NOTICE).
                   Huerta, Eliu A. and Vishwanath, Venkatram and Foster, Ian T. and
                   Thakur, Rajeev},
   year         = {2026},
+  note         = {Accepted to NeurIPS 2026 (Main Track)},
   eprint       = {2607.15388},
   archivePrefix= {arXiv},
   primaryClass = {cs.AI},
