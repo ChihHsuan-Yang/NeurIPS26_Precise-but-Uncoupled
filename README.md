@@ -121,8 +121,11 @@ make smoke-live
 ## Which numbers are invalid — read before quoting any cost figure
 
 Legacy per-problem token and model-call values were **cumulative within
-worker**, not per problem. Exact recovery is impossible. Never cite
-400K / 402K / 422K / 557K / 616K tokens, 18,385 / 48,123, or any λ\* threshold.
+worker**, not per problem. Exact recovery is impossible. The specific
+absolute token totals and verifier-cost thresholds printed in the preprint
+are withdrawn and must not be quoted; see
+[docs/LIMITATIONS.md](docs/LIMITATIONS.md) for the enumerated list and why
+each one is unrecoverable.
 
 | Field | Status |
 |---|---|
