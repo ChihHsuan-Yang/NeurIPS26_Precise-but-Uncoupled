@@ -301,7 +301,7 @@
     </div>
     <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
 
-    <figure>
+    <figure class="tall">
       <img src="static/figures/fig_supp_reviewer_radar.svg" width="625" height="556" alt="Radar chart with five axes on a 0 to 1 scale, comparing PER (dashed orange) and broadcast (solid green). PER extends further on precision, 0.861 versus 0.644, and misleading resistance, 0.921 versus 0.708. Broadcast extends further on recall, 0.872 versus 0.754, CouplingRate, 0.935 versus 0.336, and reviewer-guided repair, 0.286 versus 0.051. The two shapes cross: PER is larger on the detection axes and much smaller on the coupling and repair axes.">
       <figcaption><span class="figno">Figure&nbsp;20.</span> Five-dimensional detection&ndash;coupling&ndash;repair profile. The shape difference makes the separation concrete: the protocols diverge most sharply on the coupling and repair dimensions, not on the detection dimensions alone.</figcaption>
     </figure>
@@ -319,7 +319,7 @@
     <h3>Within-PER interventions: directional, not causal</h3>
     <p>Two probes change only how critique reaches the solver, holding model family, reviewer setup and outer-loop budget fixed. Forcing the solver to acknowledge critique explicitly (<strong>ACK-required</strong>) <em>lowers</em> final accuracy, from 85.2% to 82.5%, and roughly doubles NeglectRate (0.488&nbsp;&rarr;&nbsp;0.792). Embedding reviewer guidance directly in the solver's working context (<strong>EMB</strong>) partially recovers, to 86.3%, without closing the gap to broadcast's 89.2%.</p>
 
-    <figure>
+    <figure class="tall">
       <img src="static/figures/fig_coupling_intervention_panel_a.png" width="946" height="895" alt="Bar chart of final outcomes for four conditions, each showing FinalPassRate in a solid bar and Pass@1 in a lighter bar. PER base 85.2% and 72.8%; PER plus ACK 82.5% and 71.0%; PER plus EMB 86.3% and 74.5%; broadcast 89.2% and 78.6%.">
       <figcaption><span class="figno">Figure&nbsp;4(a).</span> Within-PER intervention outcomes over the full benchmark (N&nbsp;=&nbsp;4,181). ACK-required lowers FinalPassRate and Pass@1; EMB partially recovers both. <strong>Only panel (a) of the paper's Figure&nbsp;4 is shown here.</strong> Panel&nbsp;(b) of the published figure plots CouplingRate values that could not be reconstructed from the released aggregates, so it is omitted here. The verified values are Table&nbsp;14's <strong>0.200 (ACK)</strong> and <strong>0.247 (EMB)</strong>, given in the table below.</figcaption>
     </figure>

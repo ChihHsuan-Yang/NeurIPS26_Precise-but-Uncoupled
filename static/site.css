@@ -153,6 +153,35 @@ figure {
   border: 1px solid var(--line); border-radius: 10px; padding: 16px;
 }
 figure img { display: block; width: 100%; height: auto; }
+
+/* Tall (near-square) figures are capped by HEIGHT so they never exceed the
+   viewport. Without this a 1.06 aspect figure renders ~757px in the 800px
+   content column and dominates the page. Centred, so the cap reads as a
+   deliberate size rather than a stray left-aligned image. */
+figure.tall img {
+  width: auto;
+  max-width: 100%;
+  max-height: 460px;
+  margin-inline: auto;
+}
+/* Two tall figures sit side by side on wide screens, stack when narrow. */
+.figpair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 22px 0;
+  align-items: start;
+}
+.figpair figure { margin: 0; }
+.figpair figure.tall img { max-height: 340px; }
+@media (max-width: 860px) {
+  .figpair { grid-template-columns: 1fr; }
+  .figpair figure.tall img { max-height: 420px; }
+}
+@media (max-width: 480px) {
+  figure.tall img { max-height: 330px; }
+  .figpair figure.tall img { max-height: 330px; }
+}
 figcaption { color: var(--muted); font-size: .89rem; line-height: 1.55; margin: 14px 2px 0; }
 figcaption strong { color: var(--ink); }
 figcaption .figno { color: var(--ink); font-weight: 700; }
