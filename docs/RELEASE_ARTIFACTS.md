@@ -1,5 +1,7 @@
 # Release Artifacts — all live links
 
+**Accepted to NeurIPS 2026 (Main Track).**
+
 Every URL below was verified with an anonymous request on 2026-09-24; all
 returned HTTP 200. Re-check with `bash scripts/check_links.sh`.
 
@@ -47,7 +49,7 @@ returned HTTP 200. Re-check with `bash scripts/check_links.sh`.
 | Website, `gh-pages` | `857b579784b9a26780e26a4d98f88a7abf1edab5` |
 | Dataset, `main` | `588dc89e1b12aae041cbe015a37c0081c6bd58d6` |
 | Author site, `master` | `26311afc73da42a4568010ddfff5478642d031a2` |
-| Paper | arXiv:2607.15388**v1**, 16 July 2026, cs.AI |
+| Paper | arXiv:2607.15388**v1**, 16 July 2026, cs.AI · **accepted to NeurIPS 2026 Main Track** |
 
 ## 5. Content digests used for reproduction
 
@@ -90,3 +92,31 @@ Apache-2.0; JEEBench and SciBench are MIT. See the dataset's `LICENSE`,
 Note: the dataset card carries `extra_gated_prompt` text, but the API reports
 `gated: false` and files download unauthenticated. It is display text, not an
 access control — an open author decision, recorded in item 14.
+
+## 9. Public visibility — audited anonymously
+
+Every entry point below was fetched with **no credentials** (tokens unset,
+`--no-netrc`, no cookies) on 2026-09-24 and returned HTTP 200.
+
+| Surface | Flag | Anonymous |
+|---|---|---|
+| GitHub repository | `private=false`, `visibility=public` | 200 |
+| GitHub Pages website | `has_pages=true` | 200 |
+| Release tag v1.0.0 | — | 200 |
+| HF dataset | `private=false`, `gated=false`, `disabled=false` | 200 |
+| HF dataset viewer | 6 configs load | 200 |
+| HF Space (related) | `private=false` | 200 |
+
+Data files were **downloaded**, not merely probed, and verified:
+
+| File | Anonymous | Integrity |
+|---|---|---|
+| `data/problems.parquet` | 200, 3,004,758 B | loads, 6,653 rows × 20 cols |
+| `derived/full_release_symmetric_transitions.csv` | 200, 65,650,066 B | sha256 `7441a770…` matches |
+| `derived/matrix_2x5_precise_uncoupled_strict.csv` | 200, 5,241 B | sha256 `6c77c01e…` matches |
+| `traces/…/per/part-00000.jsonl.zst` (LFS) | 200, 32,921,391 B | zstd verifies, 189,153,127 B raw |
+| `registry/checksums.sha256` | 200, 14,529 B | — |
+
+All 10 website assets (CSS, 5 figures, favicons, OG card) return 200. The site
+has **no third-party hosted assets** — no S3, Drive, R2 or CDN — so there is no
+external bucket permission to manage and no 403 risk from one.
