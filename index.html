@@ -11,7 +11,7 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Precise but Uncoupled">
 <meta property="og:title" content="Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning">
-<meta property="og:description" content="On 4,181 verifier-grounded Omni-MATH problems with matched gpt-oss-120b actors, reviewer detection quality and successful critique uptake are empirically separable. Preprint, arXiv:2607.15388 [cs.AI].">
+<meta property="og:description" content="On 4,181 verifier-grounded Omni-MATH problems with matched gpt-oss-120b actors, reviewer detection quality and successful critique uptake are empirically separable. Accepted to NeurIPS 2026 (Main Track). arXiv:2607.15388 [cs.AI].">
 <meta property="og:url" content="https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/">
 <meta property="og:image" content="https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/static/og-card.png">
 <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning">
-<meta name="twitter:description" content="Reviewer detection quality and successful critique uptake are empirically separable. 4,181 Omni-MATH problems, matched gpt-oss-120b actors. Preprint, arXiv:2607.15388 [cs.AI].">
+<meta name="twitter:description" content="Reviewer detection quality and successful critique uptake are empirically separable. 4,181 Omni-MATH problems, matched gpt-oss-120b actors. Accepted to NeurIPS 2026 (Main Track). arXiv:2607.15388 [cs.AI].">
 <meta name="twitter:image" content="https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/static/og-card.png">
 <meta name="twitter:image:alt" content="Title card: Precise but Uncoupled, arXiv:2607.15388. Three figures: reviewer precision 0.861; useful critique changes the next candidate 0.336; reviewer-guided repair 0.051.">
 
@@ -141,7 +141,8 @@
  ],
  "url": "https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/",
  "mainEntityOfPage": "https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/",
- "creativeWorkStatus": "Preprint",
+ "creativeWorkStatus": "Published",
+ "publication": {"@type": "PublicationEvent", "name": "Conference on Neural Information Processing Systems (NeurIPS) 2026", "startDate": "2026"},
  "abstract": "Reviewer detection quality and successful critique uptake are empirically separable: a multi-agent protocol can identify errors accurately and still fail to incorporate the critique into the next candidate or convert it into a successful repair.",
  "keywords": "multi-agent systems, large language models, mathematical reasoning, agent evaluation, critique uptake",
  "codeRepository": "https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled",
@@ -161,7 +162,7 @@
 <!-- ==================== 1. HERO ==================== -->
 <header class="hero">
   <div class="wrap">
-    <p class="badge">Preprint · arXiv:2607.15388 [cs.AI]</p>
+    <p class="badge badge-accept">Accepted to NeurIPS 2026 · Main Track</p>
     <h1>Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning</h1>
     <p class="subtitle">A protocol can be good at spotting errors and still not act on them.</p>
 
@@ -185,7 +186,7 @@
       <span><sup>3</sup>University of Chicago</span>
       <span><sup>&#42;</sup>Corresponding author</span>
     </p>
-    <p class="venue">Preprint. arXiv:2607.15388 [cs.AI], v1, 16&nbsp;July&nbsp;2026. Submitted to NeurIPS&nbsp;2026.</p>
+    <p class="venue"><strong>Accepted to NeurIPS&nbsp;2026 (Main Track).</strong> arXiv:2607.15388 [cs.AI], v1, 16&nbsp;July&nbsp;2026.</p>
 
     <!-- ==================== 2. RESOURCE BUTTONS ==================== -->
     <nav class="actions" aria-label="Paper and artifact links">
@@ -217,9 +218,86 @@
 <main id="main">
 
 <!-- ==================== ABSTRACT ==================== -->
-<section id="abstract">
+<section id="highlights">
+    <div class="wrap">
+      <h2><span class="num">00</span>What we found</h2>
+
+      <p class="lead">A reviewer that is good at spotting wrong answers does not,
+      by itself, make a multi-agent system solve more problems. Detection and
+      repair come apart.</p>
+
+      <ul class="hl-list">
+        <li><strong>The better detector is the worse fixer.</strong>
+          On 4,181 Omni-MATH problems the planner&ndash;executor&ndash;reviewer pipeline
+          (PER) has the more precise reviewer &mdash; 0.861 against broadcast's 0.644
+          &mdash; yet reaches <em>lower</em> final accuracy, 85.2&#37; against 89.2&#37;.</li>
+        <li><strong>The gap is in uptake, not in detection.</strong>
+          Evaluator-verified useful critique changes the candidate PER carries
+          forward only 33.6&#37; of the time, against 93.5&#37; under broadcast.
+          Realized repair is 5.6&#215; lower: 0.051 against 0.286.</li>
+        <li><strong>Detection and repair are separable, and it generalises.</strong>
+          Across five benchmarks and two actor families, PER's reviewer precision
+          beats broadcast's in <strong>10/10</strong> cells, while inside PER
+          precision exceeds verified repair in <strong>9/10</strong> (the exception
+          has only two evaluable follow-ups) and inside broadcast in
+          <strong>10/10</strong>.</li>
+        <li><strong>Why it matters.</strong> Reviewer-centric evaluation can overstate
+          system quality. A protocol may spot errors well and still fail to solve more
+          problems, so a review stage must be judged on what the system <em>does
+          next</em>, not only on whether the critique was right.</li>
+      </ul>
+
+      <h3>The three numbers</h3>
+      <div class="keynums">
+      <div class="keynum">
+        <b>0.861</b>
+        <span class="k-label">PER reviewer precision</span>
+        <span class="k-scope">vs. 0.644 for broadcast. PER's reviewer is the better detector.</span>
+      </div>
+      <div class="keynum warm">
+        <b>0.336</b>
+        <span class="k-label">PER CouplingRate</span>
+        <span class="k-scope">vs. 0.935 for broadcast. Verified useful critique changes PER's next candidate about a third of the time.</span>
+      </div>
+      <div class="keynum warm">
+        <b>0.051</b>
+        <span class="k-label">PER reviewer-guided repair</span>
+        <span class="k-scope">vs. 0.286 for broadcast &mdash; 5.6&#215; lower realized repair.</span>
+      </div>
+    </div>
+      <p class="src">Paper Table&nbsp;11, review-conditioned decomposition.
+      N&nbsp;=&nbsp;4,181; 10,804 PER and 11,587 broadcast review instances.</p>
+    </div>
+  </section>
+
+  <section id="showcase">
+    <div class="wrap">
+      <h2><span class="num">01</span>The result in two figures</h2>
+      <p class="lead">The first figure is the mechanism. The second is the outcome
+      it produces.</p>
+
+      <figure class="wide">
+      <div class="fig-scroll" tabindex="0" role="group" aria-label="Figure 3, inner-loop coupling, scrollable figure">
+        <img src="static/figures/fig_inner_loop_coupling.svg" width="1425" height="490" alt="Two panels. Left, a stacked bar chart of inner-loop failure modes over wrong-initial-candidate cases: PER splits 11% repair, 49% neglect, 40% try-but-fail, while broadcast splits 26% repair, 26% neglect, 48% try-but-fail — 2.3 times more neglect under PER. Right, a grouped bar chart of five metrics for PER and broadcast: precision 0.86 versus 0.64, recall 0.75 versus 0.87, CouplingRate 0.34 versus 0.93, guided repair 0.05 versus 0.29, misleading resistance 0.92 versus 0.71. A shaded box marks CouplingRate and guided repair as the coupling gap.">
+      </div>
+      <figcaption><span class="figno">Figure&nbsp;3.</span> <strong>What observable process difference tracks the PER&ndash;broadcast gap?</strong> Not reviewer precision alone, but whether evaluator-verified useful critique changes the next candidate the protocol carries forward. <strong>Left:</strong> NeglectRate is the dominant inner-loop failure mode for PER (48.8% of wrong-initial-candidate cases neglect available critique), while TryButFailRate is much closer across protocols. <strong>Right:</strong> the aggregate metrics show the core paradox &mdash; PER has <em>higher</em> reviewer precision (0.861 vs.&nbsp;0.644), yet verified useful critique changes the next candidate only 33.6% of the time under PER versus 93.5% under broadcast, and reviewer-guided repair is correspondingly 5.6&#215; lower (5.1% vs.&nbsp;28.6%).</figcaption>
+    </figure>
+
+      <figure class="wide">
+      <div class="fig-scroll" tabindex="0" role="group" aria-label="Figure 2, collaboration gain by tier, scrollable figure">
+        <img src="static/figures/fig_collab_gain_by_tier.svg" width="1295" height="510" alt="Two line charts of gain in percentage points over the single-agent iterative anchor, by difficulty tier 1 to 10, for PER (orange) and broadcast (green). Panel a, FinalPassRate gain: both near zero on tiers 1 and 2, rising from tier 4 to roughly 14 to 20 points on tiers 6 to 9, with broadcast reaching about 40 points on tier 10. Panel b, Pass@1 gain: a similar rising pattern reaching roughly 27 to 35 points on tiers 7 to 10. Grey vertical bands mark the small-sample tiers 3 and 10.">
+      </div>
+      <figcaption><span class="figno">Figure&nbsp;2.</span> <strong>Tier-level collaboration gain over single-agent iterative</strong>, the matched non-collaborative anchor. Gains are near zero on tiers 1&ndash;2 and open sharply from tier 4 onward. The same pattern holds for Pass@1, before any verifier-guided retry. Grey bands mark the benchmark's small-<em>N</em> tiers (tier 3: n&nbsp;=&nbsp;20; tier 10: n&nbsp;=&nbsp;15) &mdash; do not read those two points as trends.</figcaption>
+    </figure>
+
+      <p class="src">Both figures regenerate from the released data. Method, the
+      full tables and the post-rebuttal robustness matrix follow below.</p>
+    </div>
+  </section>
+
+  <section id="abstract">
   <div class="wrap">
-    <h2><span class="num">00</span>Abstract</h2>
+    <h2><span class="num">02</span>Abstract</h2>
     <p>Many math- and science-oriented agent systems use hierarchical designs with specialized reviewer roles, assuming that a dedicated review stage should help turn wrong candidates into correct ones. We test this assumption on 4,181 verifier-grounded Omni-MATH problems using matched gpt-oss-120b actors. Collaboration adds little on the easiest tiers, but from tier 4 onward the gains open sharply; in this harder regime, broadcast-style peer discussion reaches higher final accuracy than a planner-executor-reviewer pipeline (PER). We ask whether this gap is explained by reviewer quality or by whether critique changes the next answer the protocol carries forward. It is not explained by reviewer precision alone: PER's reviewer is more precise than broadcast's (0.861 vs. 0.644), yet evaluator-verified useful critique is much less likely to change the next candidate and produces lower reviewer-guided repair. These results show that reviewer detection quality and critique uptake are empirically separable. Within matched PER interventions, forcing explicit acknowledgment lowers final accuracy, while embedding reviewer guidance directly in the solver's working context partially improves follow-through without closing the gap. Overall, reviewer-centric evaluation can overstate system quality: a protocol may spot errors well yet still fail to solve more problems if it does not act on those critiques.</p>
     <p style="font-size:.85rem;color:var(--muted);margin-bottom:0;">Abstract as published in the arXiv&nbsp;v1 metadata record. The PDF's own abstract is slightly longer; where they differ, the downloadable artifact is <a href="https://arxiv.org/abs/2607.15388">arXiv&nbsp;v1</a>.</p>
   </div>
@@ -228,7 +306,7 @@
 <!-- ==================== 3. MOTIVATION ==================== -->
 <section id="motivation">
   <div class="wrap">
-    <h2><span class="num">01</span>Why precise review need not produce repair</h2>
+    <h2><span class="num">03</span>Why precise review need not produce repair</h2>
     <p class="lead">Many math- and science-oriented agent systems add a dedicated reviewer role, on the assumption that routing critique through a review stage turns wrong candidates into correct ones. That assumption bundles two separate things together.</p>
 
     <p>A reviewer role has to do two jobs, and they can be measured apart:</p>
@@ -275,7 +353,7 @@
 <!-- ==================== 4. METHOD ==================== -->
 <section id="method" class="tint">
   <div class="wrap">
-    <h2><span class="num">02</span>Method: four protocols, and a three-step decomposition</h2>
+    <h2><span class="num">04</span>Method: four protocols, and a three-step decomposition</h2>
     <p class="lead">Every protocol solves the same 4,181 problems with the same model, the same evaluator contract, the same outer-loop budget, and the same memory reset policy. What varies is the collaboration structure.</p>
 
     <h3>The protocol ladder</h3>
@@ -356,38 +434,17 @@
 <!-- ==================== 5. MAIN FINDINGS ==================== -->
 <section id="findings">
   <div class="wrap">
-    <h2><span class="num">03</span>Main findings</h2>
+    <h2><span class="num">05</span>Main findings</h2>
 
     <div class="scope">
       <p><strong>Scope of this section.</strong> Everything under <em>Primary result</em> is the paper's own setting: Omni-MATH&nbsp;2 filtered, N&nbsp;=&nbsp;4,181, actor <em>and</em> evaluator both <code>openai/gpt-oss-120b</code>, temperature&nbsp;0. The <em>Post-rebuttal robustness</em> block that follows is separate supplementary evidence over five benchmarks and two actor families; it is <strong>not</strong> the paper's main claim and is labelled as such throughout.</p>
     </div>
 
     <h3>Primary result: precision and uptake come apart</h3>
-    <div class="keynums">
-      <div class="keynum">
-        <b>0.861</b>
-        <span class="k-label">PER reviewer precision</span>
-        <span class="k-scope">vs. 0.644 for broadcast. PER's reviewer is the better detector.</span>
-      </div>
-      <div class="keynum warm">
-        <b>0.336</b>
-        <span class="k-label">PER CouplingRate</span>
-        <span class="k-scope">vs. 0.935 for broadcast. Verified useful critique changes PER's next candidate about a third of the time.</span>
-      </div>
-      <div class="keynum warm">
-        <b>0.051</b>
-        <span class="k-label">PER reviewer-guided repair</span>
-        <span class="k-scope">vs. 0.286 for broadcast &mdash; 5.6&#215; lower realized repair.</span>
-      </div>
-    </div>
+    
     <p style="font-size:.82rem;color:var(--muted);margin-top:4px;">Paper Table&nbsp;11, review-conditioned decomposition. N&nbsp;=&nbsp;4,181; 10,804 PER and 11,587 broadcast review instances.</p>
 
-    <figure class="wide">
-      <div class="fig-scroll" tabindex="0" role="group" aria-label="Figure 3, inner-loop coupling, scrollable figure">
-        <img src="static/figures/fig_inner_loop_coupling.svg" width="1425" height="490" alt="Two panels. Left, a stacked bar chart of inner-loop failure modes over wrong-initial-candidate cases: PER splits 11% repair, 49% neglect, 40% try-but-fail, while broadcast splits 26% repair, 26% neglect, 48% try-but-fail — 2.3 times more neglect under PER. Right, a grouped bar chart of five metrics for PER and broadcast: precision 0.86 versus 0.64, recall 0.75 versus 0.87, CouplingRate 0.34 versus 0.93, guided repair 0.05 versus 0.29, misleading resistance 0.92 versus 0.71. A shaded box marks CouplingRate and guided repair as the coupling gap.">
-      </div>
-      <figcaption><span class="figno">Figure&nbsp;3.</span> <strong>What observable process difference tracks the PER&ndash;broadcast gap?</strong> Not reviewer precision alone, but whether evaluator-verified useful critique changes the next candidate the protocol carries forward. <strong>Left:</strong> NeglectRate is the dominant inner-loop failure mode for PER (48.8% of wrong-initial-candidate cases neglect available critique), while TryButFailRate is much closer across protocols. <strong>Right:</strong> the aggregate metrics show the core paradox &mdash; PER has <em>higher</em> reviewer precision (0.861 vs.&nbsp;0.644), yet verified useful critique changes the next candidate only 33.6% of the time under PER versus 93.5% under broadcast, and reviewer-guided repair is correspondingly 5.6&#215; lower (5.1% vs.&nbsp;28.6%).</figcaption>
-    </figure>
+    
 
     <div class="table-scroll" tabindex="0" role="group" aria-label="Review-conditioned decomposition, paper Table 11, scrollable table">
       <table class="min-wide">
@@ -418,12 +475,7 @@
     <h3>Where the accuracy difference lives</h3>
     <p>Collaboration is worth little on the easiest problems and a great deal on the hardest ones. Over N&nbsp;=&nbsp;4,181 the four rungs reach FinalPassRate 56.8% (baseline), 78.8% (single-agent iterative), 85.2% (PER) and 89.2% (broadcast); Pass@1 is 56.8 / 57.4 / 72.8 / 78.6%.</p>
 
-    <figure class="wide">
-      <div class="fig-scroll" tabindex="0" role="group" aria-label="Figure 2, collaboration gain by tier, scrollable figure">
-        <img src="static/figures/fig_collab_gain_by_tier.svg" width="1295" height="510" alt="Two line charts of gain in percentage points over the single-agent iterative anchor, by difficulty tier 1 to 10, for PER (orange) and broadcast (green). Panel a, FinalPassRate gain: both near zero on tiers 1 and 2, rising from tier 4 to roughly 14 to 20 points on tiers 6 to 9, with broadcast reaching about 40 points on tier 10. Panel b, Pass@1 gain: a similar rising pattern reaching roughly 27 to 35 points on tiers 7 to 10. Grey vertical bands mark the small-sample tiers 3 and 10.">
-      </div>
-      <figcaption><span class="figno">Figure&nbsp;2.</span> <strong>Tier-level collaboration gain over single-agent iterative</strong>, the matched non-collaborative anchor. Gains are near zero on tiers 1&ndash;2 and open sharply from tier 4 onward. The same pattern holds for Pass@1, before any verifier-guided retry. Grey bands mark the benchmark's small-<em>N</em> tiers (tier 3: n&nbsp;=&nbsp;20; tier 10: n&nbsp;=&nbsp;15) &mdash; do not read those two points as trends.</figcaption>
-    </figure>
+    
 
     <h3>Within-PER interventions: directional, not causal</h3>
     <p>Two probes change only how critique reaches the solver, holding model family, reviewer setup and outer-loop budget fixed. Forcing the solver to acknowledge critique explicitly (<strong>ACK-required</strong>) <em>lowers</em> final accuracy, from 85.2% to 82.5%, and roughly doubles NeglectRate (0.488&nbsp;&rarr;&nbsp;0.792). Embedding reviewer guidance directly in the solver's working context (<strong>EMB</strong>) partially recovers, to 86.3%, without closing the gap to broadcast's 89.2%.</p>
@@ -521,9 +573,61 @@
 </section>
 
 <!-- ==================== 6. DATA + REPRODUCIBILITY ==================== -->
+<section id="example">
+  <div class="wrap">
+    <h2><span class="num">06</span>What an uncoupled episode looks like</h2>
+    <p class="lead">The three-step decomposition is not an abstraction over the data &mdash; it is read off individual answer transitions. Below are real transitions from the released table, all drawn from <strong>Omni-MATH (Apache-2.0)</strong> so that nothing here is encumbered by the NonCommercial or ShareAlike terms above.</p>
+
+    <p>Each row is one review episode where the reviewer asked for a revision and the candidate in hand was in fact wrong &mdash; a true-positive detection. All six are drawn from the <strong>strict pre-gate population</strong> defined below, so every "after" answer is the actor's own immediate response to the critique rather than a system-selected candidate. What varies is what happened next.</p>
+
+    <div class="table-scroll" tabindex="0" role="group" aria-label="Answer transitions on verified-useful review episodes, scrollable table">
+      <table class="min-wide">
+        <caption>Answer transitions on verified-useful review episodes, Omni-MATH&nbsp;&times;&nbsp;<code>gpt-oss-120b</code>. Answers are shown as stored, in LaTeX.</caption>
+        <thead>
+          <tr><th scope="col">Protocol</th><th scope="col">Answer before review</th><th scope="col">Answer after review</th><th scope="col">Outcome</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">PER</th><td><code>\frac{7}{16}</code></td><td><code>\frac{7}{16}</code></td><td><strong style="color:var(--warm)">Neglected</strong><span class="sub">flagged answer was in fact wrong; the candidate did not move</span></td></tr>
+          <tr><th scope="row">PER</th><td><code>72</code></td><td><code>72</code></td><td><strong style="color:var(--warm)">Neglected</strong><span class="sub">same answer carried forward</span></td></tr>
+          <tr><th scope="row">PER</th><td><code>72</code></td><td><code>8+16\sqrt{2}</code></td><td>Changed, still wrong<span class="sub">uptake happened; repair did not</span></td></tr>
+          <tr><th scope="row">PER</th><td><code>96</code></td><td><code>192</code></td><td><strong style="color:var(--accent)">Repaired</strong><span class="sub">changed and now correct</span></td></tr>
+          <tr><th scope="row">Broadcast</th><td><code>8 + 4\sqrt{2}</code></td><td><code>8 + 4\sqrt{2}</code></td><td><strong style="color:var(--warm)">Neglected</strong><span class="sub">happens under broadcast too, just less often</span></td></tr>
+          <tr><th scope="row">Broadcast</th><td><code>132</code></td><td><code>252</code></td><td><strong style="color:var(--accent)">Repaired</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
+
+    <p>Counting these transitions requires care, because the two protocols are not eligible on the same terms. Over the whole benchmark there are <strong>1,992</strong> such useful-review episodes under PER and <strong>1,742</strong> under broadcast. Only a subset of each has an answer pair that parses on both sides <em>and</em> records the actor's own immediate response rather than a system-selected candidate: the <strong>strict pre-gate population</strong>, <strong>n&nbsp;=&nbsp;379 for PER</strong> and <strong>n&nbsp;=&nbsp;533 for broadcast</strong>. On that population, and on that population for both protocols:</p>
+    <div class="table-scroll" tabindex="0" role="group" aria-label="Strict pre-gate transition counts by protocol, scrollable table">
+      <table>
+        <caption>Strict pre-gate transitions on useful-review episodes, Omni-MATH&nbsp;&times;&nbsp;<code>gpt-oss-120b</code>. Both columns use the same population definition.</caption>
+        <thead><tr><th scope="col">&nbsp;</th><th scope="col" class="num">PER</th><th scope="col" class="num">Broadcast</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Useful-review episodes</th><td class="num">1,992</td><td class="num">1,742</td></tr>
+          <tr><th scope="row">Strict pre-gate population <em>n</em></th><td class="num">379</td><td class="num">533</td></tr>
+          <tr><th scope="row">Answer unchanged</th><td class="num">234</td><td class="num">376</td></tr>
+          <tr><th scope="row">Changed, still wrong</th><td class="num">115</td><td class="num">53</td></tr>
+          <tr><th scope="row">Repaired</th><td class="num">13</td><td class="num">16</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
+    <p>The remaining changed rows in each column are transitions the evaluator did not label on both sides, so they support no repair verdict either way.</p>
+    <div class="scope">
+      <p><strong>Why the strict population, and not simply everything that parses.</strong> Under broadcast, a further <strong>445</strong> parseable episodes are excluded because a system-selected candidate update intervened before the actor responded &mdash; the answer moved, but not as an immediate reply to the critique. Counting those would attribute the approval gate's own bookkeeping to critique uptake, which is precisely the confound the strict definition exists to remove; it would raise broadcast's apparent repair count from 16 to 67 without a single additional actor response. <strong>PER has no such rows</strong> &mdash; the strict filter removes nothing from it &mdash; so including them would compare the two protocols over different populations. This is also why no causal claim about the approval gate appears on this page: the gate changes what is even measurable, as noted in <a href="#limitations">Limitations</a>.</p>
+    </div>
+
+    <div class="warning">
+      <p><strong>What these rows are and are not.</strong> They are answer-string transitions with an evaluator verdict attached. The label "Neglected" means <em>the answer did not change</em>, not that the solver read the critique and disregarded it, and not that the critique was well written. This release contains no semantic labelling of critique text, so no claim of that kind is made anywhere. Note also that most episodes never reach the strict population at all &mdash; usually because one side of the answer pair could not be parsed &mdash; so the counts above are over that restricted remainder, not over all 1,992 and 1,742 episodes. The released table carries an explicit exclusion reason for every row, which is what makes the two populations auditable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 8. LIMITATIONS ==================== -->
 <section id="reproduce" class="tint">
   <div class="wrap">
-    <h2><span class="num">04</span>What is released, and how to reproduce it</h2>
+    <h2><span class="num">07</span>What is released, and how to reproduce it</h2>
     <p class="lead">The target reader is someone with no access to the authors' machines, storage, endpoints or credentials. Everything below is designed to work from the public repository and the public dataset alone.</p>
 
     <div class="cards three">
@@ -648,61 +752,9 @@ make smoke-live          <span class="c"># a handful of problems, minutes not ho
 </section>
 
 <!-- ==================== 7. TRACE EXAMPLE ==================== -->
-<section id="example">
-  <div class="wrap">
-    <h2><span class="num">05</span>What an uncoupled episode looks like</h2>
-    <p class="lead">The three-step decomposition is not an abstraction over the data &mdash; it is read off individual answer transitions. Below are real transitions from the released table, all drawn from <strong>Omni-MATH (Apache-2.0)</strong> so that nothing here is encumbered by the NonCommercial or ShareAlike terms above.</p>
-
-    <p>Each row is one review episode where the reviewer asked for a revision and the candidate in hand was in fact wrong &mdash; a true-positive detection. All six are drawn from the <strong>strict pre-gate population</strong> defined below, so every "after" answer is the actor's own immediate response to the critique rather than a system-selected candidate. What varies is what happened next.</p>
-
-    <div class="table-scroll" tabindex="0" role="group" aria-label="Answer transitions on verified-useful review episodes, scrollable table">
-      <table class="min-wide">
-        <caption>Answer transitions on verified-useful review episodes, Omni-MATH&nbsp;&times;&nbsp;<code>gpt-oss-120b</code>. Answers are shown as stored, in LaTeX.</caption>
-        <thead>
-          <tr><th scope="col">Protocol</th><th scope="col">Answer before review</th><th scope="col">Answer after review</th><th scope="col">Outcome</th></tr>
-        </thead>
-        <tbody>
-          <tr><th scope="row">PER</th><td><code>\frac{7}{16}</code></td><td><code>\frac{7}{16}</code></td><td><strong style="color:var(--warm)">Neglected</strong><span class="sub">flagged answer was in fact wrong; the candidate did not move</span></td></tr>
-          <tr><th scope="row">PER</th><td><code>72</code></td><td><code>72</code></td><td><strong style="color:var(--warm)">Neglected</strong><span class="sub">same answer carried forward</span></td></tr>
-          <tr><th scope="row">PER</th><td><code>72</code></td><td><code>8+16\sqrt{2}</code></td><td>Changed, still wrong<span class="sub">uptake happened; repair did not</span></td></tr>
-          <tr><th scope="row">PER</th><td><code>96</code></td><td><code>192</code></td><td><strong style="color:var(--accent)">Repaired</strong><span class="sub">changed and now correct</span></td></tr>
-          <tr><th scope="row">Broadcast</th><td><code>8 + 4\sqrt{2}</code></td><td><code>8 + 4\sqrt{2}</code></td><td><strong style="color:var(--warm)">Neglected</strong><span class="sub">happens under broadcast too, just less often</span></td></tr>
-          <tr><th scope="row">Broadcast</th><td><code>132</code></td><td><code>252</code></td><td><strong style="color:var(--accent)">Repaired</strong></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
-
-    <p>Counting these transitions requires care, because the two protocols are not eligible on the same terms. Over the whole benchmark there are <strong>1,992</strong> such useful-review episodes under PER and <strong>1,742</strong> under broadcast. Only a subset of each has an answer pair that parses on both sides <em>and</em> records the actor's own immediate response rather than a system-selected candidate: the <strong>strict pre-gate population</strong>, <strong>n&nbsp;=&nbsp;379 for PER</strong> and <strong>n&nbsp;=&nbsp;533 for broadcast</strong>. On that population, and on that population for both protocols:</p>
-    <div class="table-scroll" tabindex="0" role="group" aria-label="Strict pre-gate transition counts by protocol, scrollable table">
-      <table>
-        <caption>Strict pre-gate transitions on useful-review episodes, Omni-MATH&nbsp;&times;&nbsp;<code>gpt-oss-120b</code>. Both columns use the same population definition.</caption>
-        <thead><tr><th scope="col">&nbsp;</th><th scope="col" class="num">PER</th><th scope="col" class="num">Broadcast</th></tr></thead>
-        <tbody>
-          <tr><th scope="row">Useful-review episodes</th><td class="num">1,992</td><td class="num">1,742</td></tr>
-          <tr><th scope="row">Strict pre-gate population <em>n</em></th><td class="num">379</td><td class="num">533</td></tr>
-          <tr><th scope="row">Answer unchanged</th><td class="num">234</td><td class="num">376</td></tr>
-          <tr><th scope="row">Changed, still wrong</th><td class="num">115</td><td class="num">53</td></tr>
-          <tr><th scope="row">Repaired</th><td class="num">13</td><td class="num">16</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="scroll-hint" aria-hidden="true">&#8594; scroll the table sideways</p>
-    <p>The remaining changed rows in each column are transitions the evaluator did not label on both sides, so they support no repair verdict either way.</p>
-    <div class="scope">
-      <p><strong>Why the strict population, and not simply everything that parses.</strong> Under broadcast, a further <strong>445</strong> parseable episodes are excluded because a system-selected candidate update intervened before the actor responded &mdash; the answer moved, but not as an immediate reply to the critique. Counting those would attribute the approval gate's own bookkeeping to critique uptake, which is precisely the confound the strict definition exists to remove; it would raise broadcast's apparent repair count from 16 to 67 without a single additional actor response. <strong>PER has no such rows</strong> &mdash; the strict filter removes nothing from it &mdash; so including them would compare the two protocols over different populations. This is also why no causal claim about the approval gate appears on this page: the gate changes what is even measurable, as noted in <a href="#limitations">Limitations</a>.</p>
-    </div>
-
-    <div class="warning">
-      <p><strong>What these rows are and are not.</strong> They are answer-string transitions with an evaluator verdict attached. The label "Neglected" means <em>the answer did not change</em>, not that the solver read the critique and disregarded it, and not that the critique was well written. This release contains no semantic labelling of critique text, so no claim of that kind is made anywhere. Note also that most episodes never reach the strict population at all &mdash; usually because one side of the answer pair could not be parsed &mdash; so the counts above are over that restricted remainder, not over all 1,992 and 1,742 episodes. The released table carries an explicit exclusion reason for every row, which is what makes the two populations auditable.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== 8. LIMITATIONS ==================== -->
 <section id="limitations" class="tint">
   <div class="wrap">
-    <h2><span class="num">06</span>Limitations</h2>
+    <h2><span class="num">08</span>Limitations</h2>
     <p class="lead">Four limits shape what can and cannot be concluded. The first three bound the science; the fourth is a defect in the published artifact that this release corrects.</p>
 
     <h3>1. Benchmark and model scope</h3>
@@ -733,7 +785,7 @@ make smoke-live          <span class="c"># a handful of problems, minutes not ho
 <!-- ==================== 9. CITATION ==================== -->
 <section id="citation">
   <div class="wrap">
-    <h2><span class="num">07</span>Citation</h2>
+    <h2><span class="num">09</span>Citation</h2>
     <p class="lead">Please cite the arXiv preprint.</p>
     <div class="copywrap">
       <button class="copybtn" type="button" data-copy="#bibtex">Copy BibTeX</button>
@@ -755,7 +807,7 @@ make smoke-live          <span class="c"># a handful of problems, minutes not ho
     <dl class="meta-grid">
       <dt>arXiv</dt><dd><a href="https://arxiv.org/abs/2607.15388">arXiv:2607.15388</a> [cs.AI], v1, submitted 16&nbsp;July&nbsp;2026</dd>
       <dt>DOI</dt><dd><a href="https://doi.org/10.48550/arXiv.2607.15388">10.48550/arXiv.2607.15388</a></dd>
-      <dt>Status</dt><dd>Preprint. Submitted to NeurIPS&nbsp;2026. No decision is claimed or implied.</dd>
+      <dt>Status</dt><dd>Accepted to NeurIPS&nbsp;2026, Main Track. The arXiv record is still v1; an updated version is pending.</dd>
       <dt>Contact</dt><dd><a href="mailto:bellayang@anl.gov">bellayang@anl.gov</a> (corresponding author)</dd>
     </dl>
   </div>
@@ -764,7 +816,7 @@ make smoke-live          <span class="c"># a handful of problems, minutes not ho
 <!-- ==================== 10. TEAM + ACKNOWLEDGMENTS ==================== -->
 <section id="team" class="tint">
   <div class="wrap">
-    <h2><span class="num">08</span>Team and acknowledgments</h2>
+    <h2><span class="num">10</span>Team and acknowledgments</h2>
 
     <h3>Authors</h3>
     <div class="table-scroll" tabindex="0" role="group" aria-label="Author list in publication order, scrollable table">
@@ -798,11 +850,11 @@ make smoke-live          <span class="c"># a handful of problems, minutes not ho
 
 <footer>
   <div class="wrap">
-    <p><strong>Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning.</strong> Preprint, arXiv:2607.15388 [cs.AI], v1, 16&nbsp;July&nbsp;2026. Submitted to NeurIPS&nbsp;2026; no decision is claimed.</p>
+    <p><strong>Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning.</strong> Accepted to NeurIPS 2026 (Main Track); arXiv:2607.15388 [cs.AI], v1, 16&nbsp;July&nbsp;2026. Submitted to NeurIPS&nbsp;2026; no decision is claimed.</p>
     <p>Figures on this page are reproductions of figures from the preprint. The released dataset inherits <strong>NonCommercial</strong> terms from MaScQA (CC&nbsp;BY-NC-SA&nbsp;4.0) and <strong>ShareAlike</strong> plus a do-not-train request from LAB-Bench (CC&nbsp;BY-SA&nbsp;4.0) &mdash; see <a href="#licensing">Licensing and data use</a> before downloading. Model checkpoints are third-party public releases under their own licences.</p>
     <p>This page is hand-written static HTML. It loads no fonts, scripts, trackers or assets from any third party, and sets no cookies.</p>
     <nav class="quicknav" aria-label="Page sections">
-      <a href="#abstract">Abstract</a>
+      <a href="#highlights">Findings</a><a href="#showcase">Figures</a><a href="#abstract">Abstract</a>
       <a href="#motivation">Motivation</a>
       <a href="#method">Method</a>
       <a href="#findings">Findings</a>

@@ -551,3 +551,55 @@ table td, table th { padding-block: 11px; }
 /* Section rhythm: more air between blocks. */
 section { padding-block: 40px; }
 @media (max-width: 640px) { section { padding-block: 30px; } }
+
+/* ============================================================
+   Acceptance banner + highlights-first layout
+   ============================================================ */
+
+/* The acceptance badge is the one place on the page that gets to shout. */
+.badge-accept {
+  background: linear-gradient(135deg, #1f6f8b, #2E7D32);
+  color: #fff;
+  border: 0;
+  font-weight: 700;
+  letter-spacing: .02em;
+  box-shadow: 0 2px 10px rgba(31,111,139,.32);
+}
+
+/* Key findings: scannable claims, each led by a bolded takeaway. */
+.hl-list {
+  list-style: none;
+  padding: 0;
+  margin: 22px 0 8px;
+  display: grid;
+  gap: 14px;
+  max-width: none;
+}
+.hl-list li {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 19px;
+  font-size: .97rem;
+  line-height: 1.62;
+  max-width: none;
+}
+.hl-list li:nth-child(2),
+.hl-list li:nth-child(3) { border-left-color: var(--warm); }
+.hl-list li strong:first-child {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 3px;
+  font-size: 1.01rem;
+}
+@media (min-width: 900px) {
+  .hl-list { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .hl-list li { padding: 14px 15px; }
+}
+
+/* The showcase section leads with figures, so it gets a touch more air. */
+#showcase figure { margin-block: 26px; }
