@@ -2,232 +2,184 @@
 
 ### Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning
 
-Chih-Hsuan Yang¹\*, Jingyan Jiang¹, Vikram Vasudevan², Cheng-Hau Yang¹, Huihuo Zheng¹,
-Le Chen¹, Eliu A. Huerta¹ ³, Venkatram Vishwanath¹, Ian T. Foster¹ ³, Rajeev Thakur¹
+**NeurIPS 2026 submission · Preprint**
 
-¹ Argonne National Laboratory  ² Oregon State University  ³ University of Chicago
-\* corresponding author, `bellayang@anl.gov`
+[![Project page](https://img.shields.io/badge/Project-Page-1f6f8b)](https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/)
+[![arXiv](https://img.shields.io/badge/arXiv-2607.15388-b31b1b)](https://arxiv.org/abs/2607.15388)
+[![PDF](https://img.shields.io/badge/Paper-PDF-333333)](https://arxiv.org/pdf/2607.15388)
+[![HF dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-Card-ffcc4d)](https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled)
+[![Track A](https://img.shields.io/badge/Track%20A-offline%20%C2%B7%20byte--identical-2E7D32)](docs/REPRODUCIBILITY.md)
+[![Licence](https://img.shields.io/badge/Licence-Apache--2.0%20%C2%B7%20data%20composite-green)](LICENSE)
 
-**Preprint.** [arXiv:2607.15388](https://arxiv.org/abs/2607.15388) [cs.AI], v1, 16 July 2026.
-DOI [10.48550/arXiv.2607.15388](https://doi.org/10.48550/arXiv.2607.15388).
-*No acceptance decision is claimed.*
-
-| | |
-|---|---|
-| Paper | https://arxiv.org/abs/2607.15388 |
-| Website | https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/ |
-| Code (this repo) | https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled |
-| Data | https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled |
-
-All live links, pinned revisions and content digests are collected in
-[`docs/RELEASE_ARTIFACTS.md`](docs/RELEASE_ARTIFACTS.md).
+Chih-Hsuan Yang¹\*, Jingyan Jiang¹, Vikram Vasudevan², Cheng-Hau Yang¹, Huihuo Zheng¹, Le Chen¹, Eliu A. Huerta¹ ³, Venkatram Vishwanath¹, Ian T. Foster¹ ³, Rajeev Thakur¹
+¹ Argonne National Laboratory · ² Oregon State University · ³ University of Chicago · \* corresponding author
 
 ---
 
-## The question
+If you put a **reviewer** in a multi-agent system, and that reviewer is good at
+spotting wrong answers, does the system solve more problems? **Not on its own.**
+Being right about the error and *acting* on it are separable. On 4,181
+Omni-MATH problems the planner–executor–reviewer pipeline has the *more precise*
+reviewer, yet its critique is far less likely to change the answer the protocol
+carries forward — and it solves fewer problems than plain broadcast discussion.
 
-If you put a **reviewer** in a multi-agent system, and that reviewer is good at spotting
-wrong answers, does the system solve more problems?
+## Key finding
 
-## The finding
+On 4,181 verifier-grounded Omni-MATH problems with `gpt-oss-120b` as both actor
+and evaluator, at temperature 0:
 
-**No — not on its own.** Being right about the error and *acting* on it are separable.
+| Metric | PER | Broadcast | Reading |
+|---|--:|--:|---|
+| Reviewer precision | **0.861** | 0.644 | PER is the **better detector** |
+| CouplingRate | 0.336 | **0.935** | useful critique changes the next candidate |
+| Reviewer-guided repair | 0.051 | **0.286** | …and that change is correct |
+| FinalPassRate | 85.2% | **89.2%** | the outcome that follows |
 
-On 4,181 Omni-MATH problems with `gpt-oss-120b` as both actor and evaluator, the
-planner–executor–reviewer pipeline (**PER**) has the *more precise* reviewer
-(**0.861** vs **0.644**), yet the critique is far less likely to change the next
-answer the protocol carries forward (**CouplingRate 0.336** vs **0.935**) and yields
-less repair (**ReviewerGuidedRepairRate 0.051** vs **0.286**). Broadcast reaches
-higher final accuracy (**89.2%** vs **85.2%**).
+Detection quality and critique uptake are **empirically separable**. A protocol
+can look strong at spotting errors and still fail to solve more problems.
 
-> A system can look strong at *spotting* errors and still fail to *solve* more problems,
-> because the protocol never acts on what the reviewer found.
+## Download everything here
 
-This separation is the paper's claim, and it holds broadly: across a 5-dataset × 2-actor
-matrix, reviewer precision exceeds Broadcast's in **10/10** cells, and exceeds verified
-repair within PER in **9/10** cells and within Broadcast in **10/10**.
+No need to scroll. Every artifact is one click from this table.
 
-**What we do *not* claim:** that one protocol beats the other in general. With
-**Gemma-3-27b-it** actors the accuracy ranking *reverses* (PER 65.6% vs Broadcast 58.7%)
-while the precision–uptake separation persists. See [docs/LIMITATIONS.md](docs/LIMITATIONS.md).
-
-## The vocabulary, in one table
-
-| Term | Meaning |
-|---|---|
-| **PER** | Planner → Executor → Reviewer. Critique travels to the solver in a separable `advice` field; the solver may acknowledge it and still keep its answer. |
-| **Broadcast** | Three peers discuss a shared candidate, one speaks at a time by confidence poll, then an approval phase. Under the matched config, submission needs unanimous approval. |
-| **Reviewer precision** | When the reviewer says "this is wrong", how often is it actually wrong. A property of *detection*. |
-| **CouplingRate (uptake)** | Given a correct warning on a wrong candidate, how often the *next* answer the protocol carries forward actually changes. A property of *transmission*. This is an operational answer-transition statistic — **not** a judgement about whether the solver "understood" the critique. |
-| **ReviewerGuidedRepairRate** | Of those, how often the next answer is *correct*. A property of *outcome*. |
-
-## Two ways to use this repository
-
-| | Track A | Track B |
+| Resource | What it is | Get it |
 |---|---|---|
-| What | Reproduce the paper's tables from released data | Re-run the protocols live |
-| Model calls | **None** | **Yes — against *your* endpoint** |
-| Private infrastructure | **None** | None (any OpenAI-compatible server) |
-| Determinism | **Byte-identical, verified by sha256** | **Outputs vary** (see below) |
-| Time | ~1 minute | hours to days at full scale |
+| **Paper** | Preprint, 48 pp, 20 figures, 25 tables | [![arXiv](https://img.shields.io/badge/arXiv-abs-b31b1b)](https://arxiv.org/abs/2607.15388) [![PDF](https://img.shields.io/badge/-PDF-333333)](https://arxiv.org/pdf/2607.15388) |
+| **Project website** | Story, figures, results, citation | [![Page](https://img.shields.io/badge/Project-Page-1f6f8b)](https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/) |
+| **Dataset** | 53,224 trajectories · 95,799 review transitions · 325 MB | [![HF](https://img.shields.io/badge/%F0%9F%A4%97-Dataset%20card-ffcc4d)](https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled) [![Viewer](https://img.shields.io/badge/-Browse-4c9aff)](https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled/viewer) |
+| **Headline table input** | Pinned 65.6 MB transitions CSV, Track A input | [![Download](https://img.shields.io/badge/-Download-2E7D32)](https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled/resolve/main/derived/full_release_symmetric_transitions.csv) |
+| **2×5 result table** | The published process table, 5 KB | [![Download](https://img.shields.io/badge/-Download-2E7D32)](https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled/resolve/main/derived/matrix_2x5_precise_uncoupled_strict.csv) |
+| **Release tag** | Frozen v1.0.0 | [![Tag](https://img.shields.io/badge/-v1.0.0-6f42c1)](https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled/releases/tag/v1.0.0) |
+| **Model** | *None. No model was trained for this paper.* | — |
+
+### Models used (dependencies, not our artifacts)
+
+| Model | Role | Licence | Card |
+|---|---|---|---|
+| `openai/gpt-oss-120b` | Actor **and** evaluator, all primary results | Apache-2.0 | [![HF](https://img.shields.io/badge/%F0%9F%A4%97-Model-ffcc4d)](https://huggingface.co/openai/gpt-oss-120b) |
+| `google/gemma-3-27b-it` | Appendix second family, *n* = 835 | Gemma Terms | [![HF](https://img.shields.io/badge/%F0%9F%A4%97-Model-ffcc4d)](https://huggingface.co/google/gemma-3-27b-it) |
+
+### Benchmarks (5 × 2 × 4 robustness matrix)
+
+Omni-MATH is the paper's evidence. The other four are **post-rebuttal
+robustness**, not the main claim.
+
+| Benchmark | Slice | *n* | Role | Licence | Source |
+|---|---|--:|---|---|---|
+| **Omni-MATH 2** | `competition_math_4181` | 4,181 | **Primary** | Apache-2.0 | [![HF](https://img.shields.io/badge/%F0%9F%A4%97-Dataset-ffcc4d)](https://huggingface.co/datasets/martheballon/Omni-MATH-2) |
+| JEEBench | `text_only` | 515 | Robustness | MIT | [![Repo](https://img.shields.io/badge/-GitHub-181717)](https://github.com/dair-iitd/jeebench) |
+| SciBench | `text_only` | 574 | Robustness | MIT | [![Repo](https://img.shields.io/badge/-GitHub-181717)](https://github.com/mandyyyyii/scibench) |
+| LAB-Bench | `llm_strict` | 741 | Robustness | CC-BY-SA-4.0 · do-not-train | [![HF](https://img.shields.io/badge/%F0%9F%A4%97-Dataset-ffcc4d)](https://huggingface.co/datasets/futurehouse/lab-bench) |
+| MaScQA | `text_only` | 642 | Robustness | **CC-BY-NC-SA-4.0** · NonCommercial | [![Repo](https://img.shields.io/badge/-GitHub-181717)](https://github.com/M3RG-IITD/MaScQA) |
+
+### Documentation
+
+| Document | Read it for |
+|---|---|
+| [Release artifacts](docs/RELEASE_ARTIFACTS.md) | Every public URL and the revision to cite |
+| [Reproducibility](docs/REPRODUCIBILITY.md) | What reproduces offline, and what does not |
+| [Paper → artifact map](docs/PAPER_TO_ARTIFACT_MAP.md) | Which script and file back each table |
+| [Metrics](docs/METRICS.md) | Precision vs uptake vs repair, defined |
+| [Limitations](docs/LIMITATIONS.md) | **Read before quoting any number** |
+| [Provenance](docs/PROVENANCE.md) | Source commits, checksums, contact audit |
+| [arXiv v2 instructions](docs/ARXIV_UPDATE_INSTRUCTIONS.md) | The one open author action |
+
+## Two tracks
+
+| | Track A — offline | Track B — live |
+|---|---|---|
+| Needs a model endpoint | **No** | Yes, your own |
+| Determinism | **Byte-identical** | Varies; temperature 0 but no seed |
+| Runtime | ~1 minute | Hours, and it costs tokens |
 | Entry point | `make reproduce-analysis` | `make smoke-live` |
 
-## Fastest thing to run
+## Quickstart
 
 ```bash
+git clone https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled.git
+cd NeurIPS26_Precise-but-Uncoupled
 pip install -r requirements.txt
-make smoke-test          # offline, seconds: imports + checksums + unit tests
-make reproduce-analysis  # offline, ~1 minute: rebuilds the headline table, checks its sha256
+
+make reproduce-analysis   # Track A: regenerate the 2x5 table, no model calls
+make test                 # 43 tests
+make validate             # 13 release guards
 ```
 
-`make reproduce-analysis` prints `PASS` only if the regenerated table is **byte-identical**
-to the released one (sha256 `6c77c01e…daef2`). It has been verified byte-identical across
-Python 3.9.6/pandas 2.3.3, Python 3.13.0/pandas 3.0.3, and the original analysis
-environment — and it reproduces cell-for-cell when regenerated end-to-end from the public
-trace data (34,446 trajectories → 95,799 transitions → the same ten rows).
+`make reproduce-analysis` ends by comparing the regenerated table against
+`sha256 6c77c01e…daef2` and fails loudly on any mismatch. It reproduces
+byte-identically under Python 3.9.6 / pandas 2.3.3 and Python 3.13 / pandas
+3.0.3, and end-to-end from the public dataset.
 
-Make is a convenience, never a requirement — every target is a script:
-
-| Make target | Equivalent script |
-|---|---|
-| `make fetch-data` | `bash scripts/fetch_data.sh` |
-| `make verify-checksums` | `bash scripts/verify_checksums.sh` |
-| `make reproduce-analysis` | `bash scripts/reproduce_main_results.sh` |
-| `make reproduce-rebuttal` | `bash scripts/reproduce_rebuttal_results.sh` |
-| `make reproduce-figures` | `bash scripts/reproduce_figures.sh` |
-| `make smoke-test` | `bash scripts/smoke_test.sh` |
-| `make smoke-live` | `bash scripts/smoke_live.sh` |
-| `make validate` | `python3 scripts/validate_release.py` |
-| `make test` | `python3 -m pytest tests/ -q` |
-
-(GNU Make 3.81, the version macOS ships, is supported.)
-
-## Running Track B against your own endpoint
+To run the protocols against your own OpenAI-compatible service:
 
 ```bash
 export OPENAI_BASE_URL="https://your-endpoint.example/v1"
-export OPENAI_API_KEY="..."
-make smoke-live          # 3 problems through the PER protocol
+export OPENAI_API_KEY="your-key"
+make smoke-live
 ```
 
-Any OpenAI-compatible server works (vLLM, SGLang, llama.cpp, a commercial API). The paper
-served the **public, open-weight** checkpoint
-[`openai/gpt-oss-120b`](https://huggingface.co/openai/gpt-oss-120b) (Apache-2.0) at
-temperature 0. **No endpoint of ours is contacted and none is embedded in this
-repository.** No PBS, Slurm, or facility account is needed.
+## Which numbers are invalid — read before quoting any cost figure
 
-### Live outputs will not match the paper exactly. This is expected.
+Legacy per-problem token and model-call values were **cumulative within
+worker**, not per problem. Exact recovery is impossible. Never cite
+400K / 402K / 422K / 557K / 616K tokens, 18,385 / 48,123, or any λ\* threshold.
 
-* **There is no seed.** The paper ran at temperature 0, but a hosted endpoint exposes no
-  seed and its runtime is not frozen. Independent executions differ.
-  Measured envelope on a frozen 195-problem subset: **PER FinalPass range 0.51 pp**,
-  **Broadcast FinalPass range 2.05 pp**. That is smaller than the Broadcast−PER effect
-  (+4.10 to +6.67 pp), which is why the effect survives — but a small live run tells you
-  nothing about accuracy.
-* **The protocol code post-dates the submitted run.** These runtimes are vendored at
-  AgentVerse `b4a2db6`, which post-dates the submitted run's base `be9c47c9`. Track B
-  reproduces the experiment's *design*, not the submitted run's outputs. (The *analysis*
-  code is byte-identical to `be9c47c9` — see [docs/PROVENANCE.md](docs/PROVENANCE.md).)
+| Field | Status |
+|---|---|
+| `wall_time_seconds` | **Valid**, all 53,224 trajectories |
+| tokens / calls, non-PER protocols | **Valid**, 39,918 rows |
+| tokens / calls, PER | **NULL by construction** — 13,306 rows, not recoverable |
+| `evaluator_calls` | **Treated as invalid** pending re-derivation |
+| Correctness, Pass@1, evaluator replay, transition labels | **Unaffected** |
 
-## Is there a project model to download?
-
-**No.** No model was trained, fine-tuned, or distilled for this paper, and no weights are
-released. There is **no model card**, because there is no model. Every model used is a
-public third-party checkpoint you obtain and serve yourself. This was verified by an
-exhaustive filesystem walk plus an all-refs git history search: zero checkpoints, zero
-training code on the paper path.
-
-## Which measurements are INVALID — read before quoting any cost number
-
-A post-submission audit found that the token and model-call counters **accumulated across
-problems within a worker process** instead of resetting per problem. Averaging those
-cumulative snapshots is what produced the published per-problem figures, so:
-
-**Withdrawn — do not cite, do not recompute from released aggregates:**
-
-* all absolute **average-token** values in the paper (Table 1, Table 5, Table 14) and every
-  "tokens per extra solve" figure;
-* all **cost-per-solve**, cost-frontier and verifier-cost-threshold (λ\*) values
-  (Tables 19–21, Figures 14–16);
-* any deployment guidance derived from them.
-
-Exact recovery is **impossible** — no worker-boundary metadata and no lower-level request
-logs were retained — so no corrected value is offered in their place.
-
-**Still valid:**
-
-* every accuracy result (FinalPass, Pass@1) and every process metric
-  (precision, coupling, repair, the transition decomposition);
-* **evaluator/verifier call counts** (PER 2.19 vs Broadcast 1.35 per problem) — a separate
-  counter, unaffected. *Caveat:* a data-side check found a related `evaluator_calls` field
-  in the released per-row data showing the same cumulative signature for PER rows; that
-  **field** is marked invalid for PER as a fail-safe. The paper's per-problem call counts
-  above come from the paper's own tables and stand.
-* **wall-clock time**, which is valid for all matched trajectories (though wall time is not
-  a compute-matched measure).
-
-The harness has since been fixed (counter reset per example, with regression tests). See
-[docs/LIMITATIONS.md](docs/LIMITATIONS.md) for the full account.
-
-## What is in here
-
-```
-configs/paper/         the exact protocol configs behind the main results
-configs/rebuttal/      Gemma-4 arms -- post-rebuttal robustness only
-src/precise_uncoupled/ paper-facing API: analysis, protocols, evaluation, io, process
-src/agentverse/        the vendored runtime (analysis modules byte-identical to be9c47c9)
-data/                  the 4,181-problem corpus, examples, the pinned Track A input, manifests
-results/derived_tables/ the released reference tables (checksummed)
-scripts/               one script per make target
-docs/                  reproducibility, data, methods, metrics, provenance, limitations
-tests/                 25 recovered pipeline tests + release integrity guards
-```
-
-Start with [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md); to find the artifact behind
-a specific number in the paper, use
-[docs/PAPER_TO_ARTIFACT_MAP.md](docs/PAPER_TO_ARTIFACT_MAP.md).
+The accounting fix and its regression test ship in this repo, separate from the
+legacy results.
 
 ## Scope discipline
 
-The **paper** is Omni-MATH only: N=4,181, ten tiers, actor and evaluator both
-`openai/gpt-oss-120b`, temperature 0. The 5-dataset × 2-actor matrix is **post-rebuttal
-robustness evidence** and is labelled as such everywhere it appears. Please preserve that
-distinction if you build on this work.
+The paper is **Omni-MATH only**: *n* = 4,181, ten tiers, `gpt-oss-120b` as both
+actor and evaluator, temperature 0. The five-dataset × two-actor matrix is
+**post-rebuttal robustness evidence** and is labelled as such everywhere.
 
-## Licence and citation
+Not supported by this release: a universal PER-vs-Broadcast ranking — Gemma-3
+actors **reverse** it (PER 65.6% vs Broadcast 58.7%); any causal claim about the
+approval gate; semantic correctness of critique text; generalization beyond the
+tested families.
 
-Apache-2.0 (see [LICENSE](LICENSE)). This is a derivative work of
-[AgentVerse](https://github.com/OpenBMB/AgentVerse); attribution and the full list of
-modifications are in [NOTICE](NOTICE), as Apache-2.0 §4(b) requires. The benchmark derives
-from Omni-MATH / Omni-MATH-2 (MIT). No model weights are redistributed.
+## Licence
 
-**Note on the released dataset:** the Hugging Face dataset carries per-source licence terms
-including a NonCommercial source (MaScQA, CC-BY-NC-SA-4.0) and a ShareAlike, do-not-train
-source (LAB-Bench, CC-BY-SA-4.0). Those terms are inherited — read the dataset card before
-redistribution or commercial use. This code repository is Apache-2.0.
+Code: [Apache-2.0](LICENSE). Data: **composite and inherited** — MaScQA is
+CC-BY-NC-SA-4.0 (**NonCommercial**) and LAB-Bench is CC-BY-SA-4.0 with an
+upstream do-not-train request. See [`NOTICE`](NOTICE).
+
+## Citation
 
 ```bibtex
 @misc{yang2026preciseuncoupled,
-  title         = {Precise but Uncoupled: Reviewer Precision Does Not Guarantee
-                   Critique Uptake in Multi-Agent Math Reasoning},
-  author        = {Yang, Chih-Hsuan and Jiang, Jingyan and Vasudevan, Vikram and
-                   Yang, Cheng-Hau and Zheng, Huihuo and Chen, Le and
-                   Huerta, Eliu A. and Vishwanath, Venkatram and
-                   Foster, Ian T. and Thakur, Rajeev},
-  year          = {2026},
-  eprint        = {2607.15388},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.AI},
-  doi           = {10.48550/arXiv.2607.15388},
-  url           = {https://arxiv.org/abs/2607.15388}
+  title        = {{Precise but Uncoupled: Reviewer Precision Does Not Guarantee
+                  Critique Uptake in Multi-Agent Math Reasoning}},
+  author       = {Yang, Chih-Hsuan and Jiang, Jingyan and Vasudevan, Vikram and
+                  Yang, Cheng-Hau and Zheng, Huihuo and Chen, Le and
+                  Huerta, Eliu A. and Vishwanath, Venkatram and Foster, Ian T. and
+                  Thakur, Rajeev},
+  year         = {2026},
+  eprint       = {2607.15388},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  doi          = {10.48550/arXiv.2607.15388},
+  url          = {https://arxiv.org/abs/2607.15388}
 }
 ```
 
 ## Acknowledgments
 
-This research used resources of the Argonne Leadership Computing Facility, a U.S.
-Department of Energy (DOE) Office of Science user facility at Argonne National Laboratory
-(ANL) operated under Contract No. DE-AC02-06CH11357. The work was also supported under the
-same contract by the DOE Office of Science's Advanced Scientific Computing Research Program
-and by Laboratory Directed Research and Development (LDRD) funding from ANL, provided by
-the Director, DOE Office of Science.
+This research used resources of the Argonne Leadership Computing Facility, a
+U.S. DOE Office of Science user facility at Argonne National Laboratory,
+operated under Contract No. DE-AC02-06CH11357.
+
+We thank the authors of Omni-MATH, JEEBench, SciBench, LAB-Bench and MaScQA,
+whose benchmarks this study measures against. See [`NOTICE`](NOTICE).
+
+## Contact
+
+Chih-Hsuan (Bella) Yang — bellayang@anl.gov
