@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chihhsuan-yang.github.io/NeurIPS26_Precise-but-Uncoupled/sitemap.xml
