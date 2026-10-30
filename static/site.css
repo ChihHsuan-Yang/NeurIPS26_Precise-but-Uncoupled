@@ -603,3 +603,39 @@ section { padding-block: 40px; }
 
 /* The showcase section leads with figures, so it gets a touch more air. */
 #showcase figure { margin-block: 26px; }
+
+/* EMNLP companion-page presentation: paper, serif headings, section navigation. */
+html { scroll-padding-top: 100px; }
+.wrap { max-width: var(--maxw); padding-inline: 24px; }
+.section-nav { position: sticky; top: 0; z-index: 90; background: var(--paper); border-bottom: 1px solid var(--line); }
+.nav-inner { max-width: var(--maxw); margin: auto; padding: 12px 24px; display: flex; align-items: center; gap: 22px; }
+.nav-brand { color: var(--ink); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; white-space: nowrap; }
+.nav-links { display: flex; gap: 4px; overflow-x: auto; min-width: 0; scrollbar-width: thin; }
+.nav-links a { color: var(--muted); font-size: .82rem; white-space: nowrap; padding: 7px 9px; border-radius: 5px; }
+.nav-links a:hover { color: var(--ink); background: var(--paper-3); text-decoration: none; }
+header.hero { background: var(--paper); color: var(--ink); padding: 56px 0 40px; border-bottom: 1px solid var(--line); }
+header.hero h1 { font-family: var(--serif); font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.12; max-width: 940px; }
+.title-sub { display: block; font-size: .65em; line-height: 1.24; margin-top: 12px; font-weight: 600; }
+header.hero .subtitle { color: var(--muted); margin-top: 20px; max-width: 65ch; }
+.badge { background: var(--ink); color: var(--paper); border-color: var(--ink); font-size: .72rem; letter-spacing: .09em; text-transform: uppercase; }
+.authors, .affils, .venue, .actions-note { color: var(--muted); }
+.authors { max-width: 95ch; margin-top: 22px; }
+.authors a { color: var(--ink); }
+.actions a, .actions button { background: var(--panel); color: var(--ink); border-color: var(--line-2); }
+.actions a:hover, .actions button:hover { background: var(--paper-3); }
+.actions a.primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.actions a.primary:hover { background: var(--muted); }
+.actions-note { max-width: 92ch; }
+h2 { font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 1.9rem); margin-bottom: 16px; }
+h2 .num { display: block; font-family: var(--sans); font-size: .68rem; text-transform: uppercase; letter-spacing: .13em; margin-bottom: 7px; }
+.finding { color: var(--ink); background: var(--paper-2); border-left: 4px solid var(--ink); padding: 20px 24px; border-radius: 0 10px 10px 0; max-width: 82ch; font-family: var(--serif); font-size: 1.15rem; }
+.finding strong { color: var(--ink); }
+section.tint { background: var(--paper-2); }
+.resource-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 24px 0 18px; }
+.resource-card { color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 22px; display: flex; flex-direction: column; text-decoration: none; font-weight: 400; }
+.resource-card:hover { border-color: var(--ink); text-decoration: none; background: var(--paper-2); }
+.resource-kind { font-size: .68rem; letter-spacing: .09em; color: var(--muted); font-weight: 700; }
+.resource-card h3 { margin: 14px 0 10px; font-family: var(--serif); font-size: 1.3rem; }
+.resource-card p { font-size: .92rem; color: var(--muted); flex: 1; }
+.resource-card > span:last-child { font-size: .86rem; font-weight: 650; }
+@media(max-width: 720px) { .nav-inner { flex-direction: column; align-items: stretch; gap: 4px; padding: 10px 16px; } .nav-links { width: 100%; } .resource-grid { grid-template-columns: 1fr; } header.hero { padding-top: 32px; } .wrap { padding-inline: 18px; } }

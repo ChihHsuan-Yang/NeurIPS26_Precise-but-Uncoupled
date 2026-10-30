@@ -224,13 +224,17 @@
 <a class="skip" href="#main">Skip to content</a>
 
 <!-- ==================== 1. HERO ==================== -->
-<header class="hero">
+<nav class="section-nav" aria-label="Section navigation"><div class="nav-inner">
+<a class="nav-brand" href="#top">Precise but Uncoupled</a>
+<div class="nav-links"><a href="#highlights">Finding</a><a href="#showcase">Figures</a><a href="#abstract">Abstract</a><a href="#method">Protocols</a><a href="#findings">Results</a><a href="#resources">Code &amp; data</a><a href="#reproduce">Reproduce</a><a href="#limitations">Limitations</a><a href="#citation">Cite</a></div>
+</div></nav>
+<header class="hero" id="top">
   <div class="wrap">
     <p class="badge badge-accept">Accepted to NeurIPS 2026 · Main Track</p>
-    <h1>Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning</h1>
+    <h1>Precise but Uncoupled<span class="title-sub">Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning</span></h1>
     <p class="subtitle">A protocol can be good at spotting errors and still not act on them.</p>
 
-    <p class="finding">On 4,181 verifier-grounded Omni-MATH problems with matched <code>gpt-oss-120b</code> actors, the planner&ndash;executor&ndash;reviewer pipeline has the <strong>more precise reviewer (0.861 vs.&nbsp;0.644)</strong>, yet evaluator-verified useful critique changes the candidate it carries forward only <strong>33.6%</strong> of the time versus <strong>93.5%</strong> under broadcast deliberation &mdash; so reviewer detection quality and critique uptake are <strong>empirically separable</strong>.</p>
+
 
     <p class="authors">
       <span class="au"><a href="mailto:bellayang@anl.gov">Chih-Hsuan Yang</a><sup>1,&#42;</sup></span>,
@@ -275,7 +279,7 @@
         Cite
       </a>
     </nav>
-    <p class="actions-note">The GitHub repository and the Hugging&nbsp;Face dataset are made public at the moment of release; if a link returns 404 or 401, publication has not completed yet. No trained model is part of this project &mdash; there is no model card, because no model was trained.</p>
+    <p class="actions-note">Code and data are public. The dataset can be accessed without requesting permission. This study releases evaluation artifacts; no trained model checkpoint is part of the release.</p>
   </div>
 </header>
 
@@ -285,6 +289,7 @@
 <section id="highlights">
     <div class="wrap">
       <h2><span class="num">00</span>What we found</h2>
+    <p class="finding">On 4,181 verifier-grounded Omni-MATH problems with matched <code>gpt-oss-120b</code> actors, the planner&ndash;executor&ndash;reviewer pipeline has the <strong>more precise reviewer (0.861 vs.&nbsp;0.644)</strong>, yet evaluator-verified useful critique changes the candidate it carries forward only <strong>33.6%</strong> of the time versus <strong>93.5%</strong> under broadcast deliberation &mdash; so reviewer detection quality and critique uptake are <strong>empirically separable</strong>.</p>
 
       <p class="lead">A reviewer that is good at spotting wrong answers does not,
       by itself, make a multi-agent system solve more problems. Detection and
@@ -689,6 +694,17 @@
 </section>
 
 <!-- ==================== 8. LIMITATIONS ==================== -->
+<section id="resources"><div class="wrap">
+<h2><span class="num">Resources</span>Code and data</h2>
+<p class="lead">Read the paper, inspect the released traces, or reproduce the supported analyses.</p>
+<div class="resource-grid">
+<a class="resource-card" href="https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled"><span class="resource-kind">GITHUB · PUBLIC</span><h3>Code &amp; analysis</h3><p>Protocol configurations, analysis scripts, and reproduction instructions.</p><span>Open repository ↗</span></a>
+<a class="resource-card" href="https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled"><span class="resource-kind">HUGGING FACE · PUBLIC</span><h3>Dataset &amp; traces</h3><p>Released trajectories, process metrics, and derived tables with provenance.</p><span>Open dataset card ↗</span></a>
+<a class="resource-card" href="https://huggingface.co/datasets/AgentsSci/NeurIPS26_Precise-but-Uncoupled/viewer"><span class="resource-kind">EXPLORE</span><h3>Browse the data</h3><p>Inspect the dataset in your browser before choosing which files to download.</p><span>Open dataset viewer ↗</span></a>
+</div>
+<p class="src">The repository documents coverage, inherited benchmark terms, and reproduction limits. Availability does not imply that every historical result can be regenerated.</p>
+</div></section>
+
 <section id="reproduce" class="tint">
   <div class="wrap">
     <h2><span class="num">07</span>What is released, and how to reproduce it</h2>
@@ -765,7 +781,7 @@
 git clone https://github.com/ChihHsuan-Yang/NeurIPS26_Precise-but-Uncoupled.git
 cd NeurIPS26_Precise-but-Uncoupled
 
-<span class="c"># 2. get the data (no credentials needed once the dataset is public)</span>
+<span class="c"># 2. get the data (no credentials required)</span>
 make fetch-data
 
 <span class="c"># 3. Track A — verify checksums, then rebuild every table and figure.</span>
@@ -914,7 +930,7 @@ make smoke-live          <span class="c"># a handful of problems, minutes not ho
 
 <footer>
   <div class="wrap">
-    <p><strong>Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning.</strong> Accepted to NeurIPS 2026 (Main Track); arXiv:2607.15388 [cs.AI], v1, 16&nbsp;July&nbsp;2026. Submitted to NeurIPS&nbsp;2026; no decision is claimed.</p>
+    <p><strong>Precise but Uncoupled: Reviewer Precision Does Not Guarantee Critique Uptake in Multi-Agent Math Reasoning.</strong> Accepted to NeurIPS 2026 (Main Track); arXiv:2607.15388 [cs.AI], v1, 16&nbsp;July&nbsp;2026.</p>
     <p>Figures on this page are reproductions of figures from the preprint. The released dataset inherits <strong>NonCommercial</strong> terms from MaScQA (CC&nbsp;BY-NC-SA&nbsp;4.0) and <strong>ShareAlike</strong> plus a do-not-train request from LAB-Bench (CC&nbsp;BY-SA&nbsp;4.0) &mdash; see <a href="#licensing">Licensing and data use</a> before downloading. Model checkpoints are third-party public releases under their own licences.</p>
     <p>This page is hand-written static HTML. It loads no fonts, scripts, trackers or assets from any third party, and sets no cookies.</p>
     <nav class="quicknav" aria-label="Page sections">
